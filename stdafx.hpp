@@ -40,8 +40,24 @@
 #include <map>
 #include <new>
 
-// private headers
-#include "karasunpo.h"
+// resource IDs
+#include "resource.h"
+
+// tstring
+#ifdef UNICODE
+    typedef std::wstring tstring;
+#else
+    typedef std::string tstring;
+#endif
+
+// NOTE: Digital Mars C/C++ Compiler doesn't define INT_PTR type likely.
+#ifdef __DMC__
+    #define INT_PTR BOOL
+#endif
+
+#include "imaio.h"
+#include "mstr.hpp"
+#include "katahiromz_pdfium.h"
 
 #ifdef _MSC_VER
     // for detecting memory leak (MSVC only)
