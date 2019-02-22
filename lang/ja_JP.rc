@@ -97,7 +97,7 @@ STYLE DS_MODALFRAME | WS_POPUPWINDOW | WS_DLGFRAME
 FONT 9, "ＭＳ Ｐゴシック"
 {
     ICON 1, IDC_STATIC, 14, 14, 0, 0
-    LTEXT "画像カラスンポ ver.0.6", IDC_STATIC, 40, 14, 165, 8, SS_NOPREFIX
+    LTEXT "画像カラスンポ ver.0.7", IDC_STATIC, 40, 14, 165, 8, SS_NOPREFIX
     LTEXT "Copyright (C) 2015 片山博文MZ", IDC_STATIC, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
@@ -209,7 +209,7 @@ FONT 12, "ＭＳ Ｐゴシック"
 
 STRINGTABLE
 {
-    1, "画像カラスンポ ver.0.6 by 片山博文MZ"
+    1, "画像カラスンポ ver.0.7 by 片山博文MZ"
     2, "画像カラスンポ"
     3, "PDFまたは画像ファイルを開く"
     4, "PDF文書か画像ファイル|*.pdf;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|PDF文書 (*.pdf)|*.pdf|画像ファイル (*.jpg;*.png;*.gif;*.tif;*.bmp)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|JPEG画像 (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG画像 (*.png)|*.png|GIF画像 (*.gif)|*.gif|TIFF画像 (*.tif;*.tiff)|*.tif;*.tiff|ビットマップ画像 (*.bmp;*.dib)|*.bmp;*.dib|すべてのファイル (*.*)|*.*|"

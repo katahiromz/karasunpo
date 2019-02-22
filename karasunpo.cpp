@@ -304,7 +304,14 @@ struct WinApp {
 
     // start up
     bool startup(INT nCmdShow) {
-        if (!m_pdfium.load()) {
+        if (!m_pdfium.load(TEXT("pdfium.dll")) &&
+#ifdef _WIN64
+            !m_pdfium.load(TEXT("katahiromz_pdfium\\x64\\pdfium.dll"))
+#else
+            !m_pdfium.load(TEXT("katahiromz_pdfium\\x86\\pdfium.dll"))
+#endif
+        )
+        {
             CenterMessageBox(NULL, loadString(15),
                 NULL, MB_ICONERROR);
             return false;

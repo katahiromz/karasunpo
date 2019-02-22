@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2A516438-9675-40B5-AE5B-D94756F3CABE}
 AppName=画像カラスンポ
-AppVerName=画像カラスンポ 0.6
+AppVerName=画像カラスンポ 0.7
 AppPublisher=片山博文MZ
 AppPublisherURL=http://katahiromz.web.fc2.com/
 AppSupportURL=http://katahiromz.web.fc2.com/

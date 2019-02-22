@@ -97,7 +97,7 @@ STYLE DS_MODALFRAME | WS_POPUPWINDOW | WS_DLGFRAME
 FONT 9, "MS Shell Dlg"
 {
     ICON 1, IDC_STATIC, 14, 14, 0, 0
-    LTEXT "karasunpo ver.0.6", IDC_STATIC, 40, 14, 165, 8, SS_NOPREFIX
+    LTEXT "karasunpo ver.0.7", IDC_STATIC, 40, 14, 165, 8, SS_NOPREFIX
     LTEXT "Copyright (C) 2015 Katayama Hirofumi MZ", IDC_STATIC, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
@@ -248,8 +248,8 @@ IDC_MOVE CURSOR "res/1033_Cursor_5.cur"
 // RT_VERSION
 
 1 VERSIONINFO
-FILEVERSION     0, 6, 0, 0
-PRODUCTVERSION  0, 6, 0, 0
+FILEVERSION     0, 7, 0, 0
+PRODUCTVERSION  0, 7, 0, 0
 FILEOS          0x40004
 FILETYPE        0x1
 {
@@ -259,19 +259,19 @@ FILETYPE        0x1
         {
             VALUE "CompanyName", "片山博文MZ\0"
             VALUE "FileDescription", "画像カラスンポ\0"
-            VALUE "FileVersion", "0.6\0"
+            VALUE "FileVersion", "0.7\0"
             VALUE "LegalCopyright", "Copyright (C) 2015 片山博文MZ\0"
             VALUE "ProductName", "画像カラスンポ\0"
-            VALUE "ProductVersion", "0.6\0"
+            VALUE "ProductVersion", "0.7\0"
         }
         BLOCK "040904E4"
         {
             VALUE "CompanyName", "Katayama Hirofumi MZ\0"
             VALUE "FileDescription", "karasunpo\0"
-            VALUE "FileVersion", "0.6\0"
+            VALUE "FileVersion", "0.7\0"
             VALUE "LegalCopyright", "Copyright (C) 2015 Katayama Hirofumi MZ\0"
             VALUE "ProductName", "karasunpo\0"
-            VALUE "ProductVersion", "0.6\0"
+            VALUE "ProductVersion", "0.7\0"
         }
     }
     BLOCK "VarFileInfo"
@@ -292,7 +292,7 @@ FILETYPE        0x1
 
 STRINGTABLE
 {
-    1, "karasunpo ver.0.6 by katahiromz"
+    1, "karasunpo ver.0.7 by katahiromz"
     2, "karasunpo"
     3, "Open an image file"
     4, "PDF Documents or Image Files|*.pdf;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|PDF Documents (*.pdf)|*.pdf|Image Files (*.jpg;*.png;*.gif;*.tif;*.bmp)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|JPEG Images (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG Images (*.png)|*.png|GIF Images (*.gif)|*.gif|TIFF Images (*.tif;*.tiff)|*.tif;*.tiff|Bitmap Images (*.bmp;*.dib)|*.bmp;*.dib|All Files (*.*)|*.*|"
