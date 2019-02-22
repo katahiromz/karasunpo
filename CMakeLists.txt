@@ -63,6 +63,10 @@ enable_language(RC)
 
 ##############################################################################
 
+if (MSVC)
+    add_definitions(-DMSVC)
+endif()
+
 find_package(GIF REQUIRED)
 if (GIF_FOUND)
     add_definitions(-DHAVE_GIF)
