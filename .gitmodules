@@ -1,0 +1,9 @@
+[submodule "mstr"]
+	path = mstr
+	url = https://github.com/katahiromz/mstr.git
+[submodule "imaio"]
+	path = imaio
+	url = https://github.com/katahiromz/imaio.git
+[submodule "katahiromz_pdfium"]
+	path = katahiromz_pdfium
+	url = https://github.com/katahiromz/katahiromz_pdfium.git
