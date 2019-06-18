@@ -42,7 +42,6 @@ Source: "..\..\x86\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\x86\libtiff-5.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\x86\libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\x86\libzstd.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x86\pdfium.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\x86\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
