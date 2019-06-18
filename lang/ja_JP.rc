@@ -98,7 +98,7 @@ FONT 9, "ＭＳ Ｐゴシック"
 {
     ICON 1, IDC_STATIC, 14, 14, 0, 0
     LTEXT "画像カラスンポ ver.0.7", IDC_STATIC, 40, 14, 165, 8, SS_NOPREFIX
-    LTEXT "Copyright (C) 2015 片山博文MZ", IDC_STATIC, 40, 26, 165, 8
+    LTEXT "Copyright (C) 2015-2019 片山博文MZ", IDC_STATIC, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
 
