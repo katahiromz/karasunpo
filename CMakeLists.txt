@@ -92,7 +92,7 @@ subdirs(mstr imaio)
 
 include_directories(. mstr imaio katahiromz_pdfium)
 
-# executable
+# karasunpo.exe
 add_executable(karasunpo WIN32 karasunpo.cpp karasunpo_res.rc)
 target_include_directories(karasunpo PRIVATE
     ${GIF_INCLUDE_DIR}
@@ -108,5 +108,10 @@ target_link_libraries(karasunpo PRIVATE
     ${JPEG_LIBRARIES}
     ${PNG_LIBRARIES}
     ${TIFF_LIBRARIES})
+
+# launcher.exe
+add_executable(launcher WIN32 launcher.cpp launcher_res.rc)
+target_link_libraries(launcher PRIVATE shlwapi)
+target_compile_definitions(launcher PRIVATE -DUNICODE -D_UNICODE)
 
 ##############################################################################

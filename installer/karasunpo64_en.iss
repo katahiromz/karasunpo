@@ -30,27 +30,28 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\ReadMe.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\License.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\karasunpo.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\katahiromz_pdfium\x64\pdfium.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libgcc_s_seh-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libgif-7.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libjpeg-8.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\liblzma-5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libpng16-16.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libtiff-5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\libzstd.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\x64\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\karasunpo.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\katahiromz_pdfium\x64\pdfium.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libgcc_s_seh-1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libgif-7.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libjpeg-8.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\liblzma-5.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libpng16-16.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libstdc++-6.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libtiff-5.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libwinpthread-1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\libzstd.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\x64\zlib1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\karasunpo"; Filename: "{app}\karasunpo64.exe"
+Name: "{group}\karasunpo"; Filename: "{app}\bin\karasunpo.exe"
 Name: "{group}\ReadMe.txt"; Filename: "{app}\ReadMe.txt"
 Name: "{group}\License.txt"; Filename: "{app}\License.txt"
 Name: "{group}\{cm:ProgramOnTheWeb,karasunpo}"; Filename: "http://katahiromz.web.fc2.com/"
 Name: "{group}\{cm:UninstallProgram,karasunpo}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\karasunpo"; Filename: "{app}\karasunpo64.exe"; Tasks: desktopicon
+Name: "{commondesktop}\karasunpo"; Filename: "{app}\bin\karasunpo.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\karasunpo64.exe"; Description: "{cm:LaunchProgram,karasunpo}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\bin\karasunpo.exe"; Description: "{cm:LaunchProgram,karasunpo}"; Flags: nowait postinstall skipifsilent
