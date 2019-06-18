@@ -942,12 +942,11 @@ struct WinApp {
                 HGDIOBJ hPenOld = ::SelectObject(hdcMem1, hPen);
                 ::MoveToEx(hdcMem1, pt0.x, pt0.y, NULL);
                 ::LineTo(hdcMem1, pt1.x, pt1.y);
-                ::SelectObject(hdcMem1, hPenOld);
-                ::DeleteObject(hPen);
-
                 if (m_bDoesDrawCircle) {
                     drawTwoPointCircle(hdcMem1, pt0, pt1);
                 }
+                ::SelectObject(hdcMem1, hPenOld);
+                ::DeleteObject(hPen);
             }
 
             if (m_bHasSegment) {
