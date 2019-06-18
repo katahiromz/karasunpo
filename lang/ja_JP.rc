@@ -199,7 +199,7 @@ FONT 12, "ＭＳ Ｐゴシック"
     LTEXT "長さ(&L):", stc1, 5, 50, 85, 14
     EDITTEXT edt1, 5, 65, 85, 14, ES_READONLY | ES_NOHIDESEL | ES_AUTOHSCROLL | ES_RIGHT
     PUSHBUTTON "クリップボードにコピー(&C)", psh3, 5, 80, 85, 30, BS_MULTILINE
-    AUTOCHECKBOX "補助円を書く(&D)", chx1, 5, 115, 85, 14, BS_NOTIFY
+    AUTOCHECKBOX "補助円を描く(&D)", chx1, 5, 115, 85, 14, BS_NOTIFY
     PUSHBUTTON "戻る(&B)", psh1, 5, 130, 40, 14
     PUSHBUTTON "終了(&X)", psh2, 50, 130, 40, 14
 }
