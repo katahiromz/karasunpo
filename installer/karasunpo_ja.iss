@@ -31,7 +31,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\ReadMeJP.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\License.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\karasunpo.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "..\katahiromz_pdfium\x86\pdfium.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "..\..\x86\libgcc_s_dw2-1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
@@ -47,6 +46,7 @@ Source: "..\..\x86\zlib1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
+Name: "{app}\画像カラスンポ"; Filename: "{app}\bin\karasunpo.exe"
 Name: "{group}\画像カラスンポ"; Filename: "{app}\bin\karasunpo.exe"
 Name: "{group}\ReadMeJP.txt"; Filename: "{app}\ReadMeJP.txt"
 Name: "{group}\License.txt"; Filename: "{app}\License.txt"
