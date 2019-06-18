@@ -100,18 +100,11 @@ target_include_directories(karasunpo PRIVATE
     ${PNG_INCLUDE_DIRS}
     ${TIFF_INCLUDE_DIRS})
 target_compile_definitions(karasunpo PRIVATE -DUNICODE -D_UNICODE)
-
-# link
 target_link_libraries(karasunpo PRIVATE
     comctl32 imaio
     ${GIF_LIBRARIES}
     ${JPEG_LIBRARIES}
     ${PNG_LIBRARIES}
     ${TIFF_LIBRARIES})
-
-# launcher.exe
-add_executable(launcher WIN32 launcher.cpp launcher_res.rc)
-target_link_libraries(launcher PRIVATE shlwapi)
-target_compile_definitions(launcher PRIVATE -DUNICODE -D_UNICODE)
 
 ##############################################################################
