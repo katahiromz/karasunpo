@@ -170,7 +170,7 @@ FONT 12, "ＭＳ Ｐゴシック"
 {
     CTEXT "☆ 基準線分 ☆", IDC_STATIC, 5, 5, 85, 14
     LTEXT "イメージ上をドラッグして基準線分を入力して下さい。\n\n基準線分は、イメージ上の名目上の長さや角度の基準となります。基準線分は長いほど精度が高くなります。\n\n※ イメージはCtrl+ホイールで拡大・縮小できます。", IDC_STATIC, 5, 20, 85, 90
-    AUTOCHECKBOX "補助円を書く(&D)", chx1, 5, 115, 85, 14, BS_NOTIFY
+    AUTOCHECKBOX "補助円を描く(&D)", chx1, 5, 115, 85, 14, BS_NOTIFY
     PUSHBUTTON "戻る(&B)", psh1, 5, 130, 40, 14
     DEFPUSHBUTTON "次へ(&N)", psh2, 50, 130, 40, 14, WS_DISABLED
 }
