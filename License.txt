@@ -2,7 +2,7 @@ This software is released under New BSD License.
 This software uses the PDFium library of Google for PDF rendering.
 This software is based on the work of the Independent JPEG Group.
 
-Copyright (C) 2015 Katayama Hirofumi MZ. All rights reserved.
+Copyright (C) 2015-2019 Katayama Hirofumi MZ. All rights reserved.
 
 -------------------------------------------------------------------------
                              NEW BSD LICENSE
