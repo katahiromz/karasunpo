@@ -23,7 +23,7 @@ SolidCompression=yes
 UninstallDisplayIcon={app}\karasunpo.exe
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
 Source: "..\ReadMe.txt"; DestDir: "{app}"; Flags: ignoreversion
