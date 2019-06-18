@@ -3045,6 +3045,8 @@ INT APIENTRY WinMain(
     WinApp app(hInstance, __argc, __argv);
 #endif
 
+    InitCommonControls();
+
     if (!app.registerClasses()) {
         CenterMessageBox(
             NULL, TEXT("ERROR: RegisterClass failed"), NULL,
