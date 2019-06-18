@@ -1,6 +1,6 @@
 # CMakeLists.txt --- CMake project settings
-#    ex) cmake -G "Visual Studio 9 2008"
-#    ex) cmake -DCMAKE_BUILD_TYPE=Release -G "MSYS Makefiles"
+#    ex) cmake -G "Visual Studio 9 2008" .
+#    ex) cmake -DCMAKE_BUILD_TYPE=Release -G "MSYS Makefiles" .
 ##############################################################################
 
 # CMake minimum version
@@ -32,10 +32,10 @@ endif()
 #set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 #set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-# enable Win32 resource
-enable_language(RC)
-
 #if (WIN32)
+#    # enable Win32 resource
+#    enable_language(RC)
+#
 #    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 #        # using Clang
 #        set(CMAKE_C_FLAGS "-static")
