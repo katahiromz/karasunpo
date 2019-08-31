@@ -9,12 +9,18 @@ WinMain(HINSTANCE   hInstance,
         LPSTR       lpCmdLine,
         INT         nCmdShow)
 {
-    WCHAR szPath[MAX_PATH];
+    INT argc;
+    LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
+
+    WCHAR szPath[MAX_PATH];
     ::GetModuleFileNameW(NULL, szPath, MAX_PATH);
     ::PathRemoveFileSpecW(szPath);
     ::PathAppendW(szPath, L"bin\\karasunpo.exe");
 
-    ::ShellExecuteW(NULL, NULL, szPath, NULL, NULL, nCmdShow);
+    if (argc >= 2)
+        ::ShellExecuteW(NULL, NULL, szPath, wargv[1], NULL, nCmdShow);
+    else
+        ::ShellExecuteW(NULL, NULL, szPath, NULL, NULL, nCmdShow);
     return 0;
 }

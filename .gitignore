@@ -19,3 +19,5 @@ cmake_install.cmake
 CMakeFiles
 Makefile
 *-old
+karasunpo32-*
+karasunpo64-*
