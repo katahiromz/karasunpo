@@ -5,7 +5,7 @@ if [ ! -e launcher/launcher.exe ]; then
 fi
 
 for i in en ja; do
-	MYDIR=karasunpo64-3.8$i
+	MYDIR=karasunpo64-0.8$i
 
 	if [ ! -e $MYDIR ]; then
 		mkdir $MYDIR
