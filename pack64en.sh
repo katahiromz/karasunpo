@@ -17,7 +17,7 @@ cp -f ReadMe.txt $MYDIR
 cp -f License.txt $MYDIR
 cp -f launcher/launcher.exe $MYDIR
 cp -f karasunpo.exe $MYDIR/bin
-cp -f katahiromz_pdfium/x86/pdfium.dll $MYDIR/bin
+cp -f katahiromz_pdfium/x64/pdfium.dll $MYDIR/bin
 cp -f ../x64/libgcc_s_seh-1.dll $MYDIR/bin
 cp -f ../x64/libgif-7.dll $MYDIR/bin
 cp -f ../x64/libjpeg-8.dll $MYDIR/bin

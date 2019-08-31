@@ -12,7 +12,6 @@ WinMain(HINSTANCE   hInstance,
     INT argc;
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
-
     WCHAR szPath[MAX_PATH];
     ::GetModuleFileNameW(NULL, szPath, MAX_PATH);
     ::PathRemoveFileSpecW(szPath);
