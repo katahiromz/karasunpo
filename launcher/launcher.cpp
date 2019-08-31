@@ -21,5 +21,7 @@ WinMain(HINSTANCE   hInstance,
         ::ShellExecuteW(NULL, NULL, szPath, wargv[1], NULL, nCmdShow);
     else
         ::ShellExecuteW(NULL, NULL, szPath, NULL, NULL, nCmdShow);
+
+    ::LocalFree(wargv);
     return 0;
 }
