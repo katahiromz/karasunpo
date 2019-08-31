@@ -20,7 +20,7 @@ OutputDir=.
 OutputBaseFilename=karasunpo32ja-0.8-setup
 Compression=lzma
 SolidCompression=yes
-UninstallDisplayIcon={app}\karasunpo.exe
+UninstallDisplayIcon={app}\bin\karasunpo.exe
 
 [Languages]
 Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"

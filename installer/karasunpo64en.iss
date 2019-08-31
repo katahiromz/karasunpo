@@ -20,7 +20,7 @@ OutputDir=.
 OutputBaseFilename=karasunpo64en-0.8-setup
 Compression=lzma
 SolidCompression=yes
-UninstallDisplayIcon={app}\karasunpo.exe
+UninstallDisplayIcon={app}\bin\karasunpo.exe
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 

@@ -20,7 +20,7 @@ OutputDir=.
 OutputBaseFilename=karasunpo32en-0.8-setup
 Compression=lzma
 SolidCompression=yes
-UninstallDisplayIcon={app}\karasunpo.exe
+UninstallDisplayIcon={app}\bin\karasunpo.exe
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
