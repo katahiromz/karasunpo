@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2A516438-9675-40B5-AE5B-D94757F3CABE}
 AppName=karasunpo
-AppVerName=karasunpo 0.7
+AppVerName=karasunpo 0.8
 AppPublisher=Katayama Hirofumi MZ
 AppPublisherURL=http://katahiromz.web.fc2.com/
 AppSupportURL=http://katahiromz.web.fc2.com/
@@ -17,7 +17,7 @@ DefaultGroupName=karasunpo
 AllowNoIcons=yes
 LicenseFile=..\License.txt
 OutputDir=.
-OutputBaseFilename=karasunpo_en-0.7-setup
+OutputBaseFilename=karasunpo_en-0.8-setup
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\karasunpo.exe

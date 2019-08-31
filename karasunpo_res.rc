@@ -15,8 +15,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 // RT_VERSION
 
 1 VERSIONINFO
-FILEVERSION     0, 7, 0, 0
-PRODUCTVERSION  0, 7, 0, 0
+FILEVERSION     0, 8, 0, 0
+PRODUCTVERSION  0, 8, 0, 0
 FILEOS          0x40004
 FILETYPE        0x1
 {
@@ -26,19 +26,19 @@ FILETYPE        0x1
         {
             VALUE "CompanyName", "片山博文MZ\0"
             VALUE "FileDescription", "画像カラスンポ\0"
-            VALUE "FileVersion", "0.7\0"
+            VALUE "FileVersion", "0.8\0"
             VALUE "LegalCopyright", "Copyright (C) 2015 片山博文MZ\0"
             VALUE "ProductName", "画像カラスンポ\0"
-            VALUE "ProductVersion", "0.7\0"
+            VALUE "ProductVersion", "0.8\0"
         }
         BLOCK "040904E4"
         {
             VALUE "CompanyName", "Katayama Hirofumi MZ\0"
             VALUE "FileDescription", "karasunpo\0"
-            VALUE "FileVersion", "0.7\0"
+            VALUE "FileVersion", "0.8\0"
             VALUE "LegalCopyright", "Copyright (C) 2015 Katayama Hirofumi MZ\0"
             VALUE "ProductName", "karasunpo\0"
-            VALUE "ProductVersion", "0.7\0"
+            VALUE "ProductVersion", "0.8\0"
         }
     }
     BLOCK "VarFileInfo"
