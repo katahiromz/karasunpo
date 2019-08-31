@@ -5,32 +5,30 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{2A516438-9675-40B5-AE5B-D94756F3CABD}
-AppName=画像カラスンポ
-AppVerName=画像カラスンポ 0.8
-AppPublisher=片山博文MZ
+AppId={{2A516438-9675-40B5-AE5B-D94757F3CABE}
+AppName=karasunpo
+AppVerName=karasunpo 0.8
+AppPublisher=Katayama Hirofumi MZ
 AppPublisherURL=http://katahiromz.web.fc2.com/
 AppSupportURL=http://katahiromz.web.fc2.com/
 AppUpdatesURL=http://katahiromz.web.fc2.com/
 DefaultDirName={pf}\karasunpo
-DefaultGroupName=画像カラスンポ
+DefaultGroupName=karasunpo
 AllowNoIcons=yes
 LicenseFile=..\License.txt
 OutputDir=.
-OutputBaseFilename=karasunpo_ja-0.8-setup
+OutputBaseFilename=karasunpo_en-0.8-setup
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\karasunpo.exe
-
-[Languages]
-Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\ReadMeJP.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReadMe.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\launcher\launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\karasunpo.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "..\katahiromz_pdfium\x86\pdfium.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "..\..\x86\libgcc_s_dw2-1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
@@ -46,13 +44,13 @@ Source: "..\..\x86\zlib1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{app}\画像カラスンポ"; Filename: "{app}\bin\karasunpo.exe"
-Name: "{group}\画像カラスンポ"; Filename: "{app}\bin\karasunpo.exe"
-Name: "{group}\ReadMeJP.txt"; Filename: "{app}\ReadMeJP.txt"
+Name: "{app}\Karasunpo"; Filename: "{app}\bin\karasunpo.exe"
+Name: "{group}\karasunpo"; Filename: "{app}\bin\karasunpo.exe"
+Name: "{group}\ReadMe.txt"; Filename: "{app}\ReadMe.txt"
 Name: "{group}\License.txt"; Filename: "{app}\License.txt"
-Name: "{group}\作者のホームページ"; Filename: "http://katahiromz.web.fc2.com/"
-Name: "{group}\{cm:UninstallProgram,画像カラスンポ}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\画像カラスンポ"; Filename: "{app}\bin\karasunpo.exe"; Tasks: desktopicon
+Name: "{group}\{cm:ProgramOnTheWeb,karasunpo}"; Filename: "http://katahiromz.web.fc2.com/"
+Name: "{group}\{cm:UninstallProgram,karasunpo}"; Filename: "{uninstallexe}"
+Name: "{commondesktop}\karasunpo"; Filename: "{app}\bin\karasunpo.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\bin\karasunpo.exe"; Description: "{cm:LaunchProgram,画像カラスンポ}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\bin\karasunpo.exe"; Description: "{cm:LaunchProgram,karasunpo}"; Flags: nowait postinstall skipifsilent

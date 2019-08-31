@@ -30,6 +30,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\ReadMe.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\launcher\launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\karasunpo.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "..\katahiromz_pdfium\x64\pdfium.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "..\..\x64\libgcc_s_seh-1.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
