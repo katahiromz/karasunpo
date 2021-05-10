@@ -109,17 +109,17 @@ struct katahiromz_pdfium {
                 FPDF_GetPageCount = get_proc<FN_FPDF_GetPageCount>("FPDF_GetPageCount");
                 FPDF_GetLastError = get_proc<FN_FPDF_GetLastError>("FPDF_GetLastError");
             #else
-                FPDF_InitLibrary = get_proc<FN_FPDF_InitLibrary>("FPDF_InitLibrary");
-                FPDF_DestroyLibrary = get_proc<FN_FPDF_DestroyLibrary>("FPDF_DestroyLibrary");
-                FPDF_LoadDocument = get_proc<FN_FPDF_LoadDocument>("FPDF_LoadDocument");
-                FPDF_LoadPage = get_proc<FN_FPDF_LoadPage>("FPDF_LoadPage");
-                FPDF_GetPageWidth = get_proc<FN_FPDF_GetPageWidth>("FPDF_GetPageWidth");
-                FPDF_GetPageHeight = get_proc<FN_FPDF_GetPageHeight>("FPDF_GetPageHeight");
-                FPDF_RenderPage = get_proc<FN_FPDF_RenderPage>("FPDF_RenderPage");
-                FPDF_ClosePage = get_proc<FN_FPDF_ClosePage>("FPDF_ClosePage");
-                FPDF_CloseDocument = get_proc<FN_FPDF_CloseDocument>("FPDF_CloseDocument");
-                FPDF_GetPageCount = get_proc<FN_FPDF_GetPageCount>("FPDF_GetPageCount");
-                FPDF_GetLastError = get_proc<FN_FPDF_GetLastError>("FPDF_GetLastError");
+                FPDF_InitLibrary = get_proc<FN_FPDF_InitLibrary>("_FPDF_InitLibrary@0");
+                FPDF_DestroyLibrary = get_proc<FN_FPDF_DestroyLibrary>("_FPDF_DestroyLibrary@0");
+                FPDF_LoadDocument = get_proc<FN_FPDF_LoadDocument>("_FPDF_LoadDocument@8");
+                FPDF_LoadPage = get_proc<FN_FPDF_LoadPage>("_FPDF_LoadPage@8");
+                FPDF_GetPageWidth = get_proc<FN_FPDF_GetPageWidth>("_FPDF_GetPageWidth@4");
+                FPDF_GetPageHeight = get_proc<FN_FPDF_GetPageHeight>("_FPDF_GetPageHeight@4");
+                FPDF_RenderPage = get_proc<FN_FPDF_RenderPage>("_FPDF_RenderPage@32");
+                FPDF_ClosePage = get_proc<FN_FPDF_ClosePage>("_FPDF_ClosePage@4");
+                FPDF_CloseDocument = get_proc<FN_FPDF_CloseDocument>("_FPDF_CloseDocument@4");
+                FPDF_GetPageCount = get_proc<FN_FPDF_GetPageCount>("_FPDF_GetPageCount@4");
+                FPDF_GetLastError = get_proc<FN_FPDF_GetLastError>("_FPDF_GetLastError@0");
             #endif
             if (FPDF_InitLibrary &&
                 FPDF_DestroyLibrary &&
