@@ -1,0 +1,6 @@
+diff -Nru jbigkit-2.1-old/libjbig/CMakeLists.txt jbigkit-2.1-new/libjbig/CMakeLists.txt
+--- jbigkit-2.1-old/libjbig/CMakeLists.txt	1970-01-01 09:00:00.000000000 +0900
++++ jbigkit-2.1-new/libjbig/CMakeLists.txt	2021-05-10 09:38:15.764836200 +0900
+@@ -0,0 +1,2 @@
++project(libjbig C)
++add_library(jbig STATIC jbig.c jbig85.c jbig_ar.c)

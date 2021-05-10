@@ -1,0 +1,44 @@
+diff -Nru lpng1637-old/scripts/makefile.gcc lpng1637-new/scripts/makefile.gcc
+--- lpng1637-old/scripts/makefile.gcc	2019-04-15 03:10:32.000000000 +0900
++++ lpng1637-new/scripts/makefile.gcc	2021-05-10 09:44:37.691368800 +0900
+@@ -8,16 +8,16 @@
+ # and license in png.h
+ 
+ # Location of the zlib library and include files
+-ZLIBINC = ../zlib
+-ZLIBLIB = ../zlib
++ZLIBINC = ..\zlib-1.2.11
++ZLIBLIB = ..\zlib-1.2.11
+ 
+ # Compiler, linker, lib and other tools
+ CC = gcc
+ LD = $(CC)
+ AR_RC = ar rcs
+ RANLIB = ranlib
+-CP = cp
+-RM_F = rm -f
++CP = copy
++RM_F = del
+ 
+ WARNMORE = -Wwrite-strings -Wpointer-arith -Wshadow \
+ 	-Wmissing-declarations -Wtraditional -Wcast-align \
+@@ -31,8 +31,8 @@
+ EXEEXT =
+ 
+ # Pre-built configuration
+-# See scripts/pnglibconf.mak for more options
+-PNGLIBCONF_H_PREBUILT = scripts/pnglibconf.h.prebuilt
++# See scripts\pnglibconf.mak for more options
++PNGLIBCONF_H_PREBUILT = scripts\pnglibconf.h.prebuilt
+ 
+ # Variables
+ OBJS =  png.o pngerror.o pngget.o pngmem.o pngpread.o \
+@@ -60,7 +60,7 @@
+ 	$(RANLIB) $@
+ 
+ test: pngtest$(EXEEXT)
+-	./pngtest$(EXEEXT)
++	.\pngtest$(EXEEXT)
+ 
+ pngtest$(EXEEXT): pngtest.o libpng.a
+ 	$(LD) $(LDFLAGS) -o $@ pngtest.o libpng.a $(LIBS)
