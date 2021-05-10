@@ -35,7 +35,9 @@ a.*
 *.exe
 *.dll
 lib*.a
-x64
+x64/
 Win32
+!katahiromz_pdfium/x86/
+!katahiromz_pdfium/x64/
 !katahiromz_pdfium/x86/pdfium.dll
 !katahiromz_pdfium/x64/pdfium.dll
