@@ -1,0 +1,18 @@
+diff -Nru libdeflate-old/CMakeLists.txt libdeflate-new/CMakeLists.txt
+--- libdeflate-old/CMakeLists.txt	1970-01-01 09:00:00.000000000 +0900
++++ libdeflate-new/CMakeLists.txt	2021-05-10 11:40:58.276254900 +0900
+@@ -0,0 +1,14 @@
++cmake_minimum_required(VERSION 3.0)
++project(libdeflate C)
++include_directories(.)
++add_library(deflate STATIC
++    lib/adler32.c
++    lib/crc32.c
++    lib/deflate_compress.c
++    lib/deflate_decompress.c
++    lib/gzip_compress.c
++    lib/gzip_decompress.c
++    lib/utils.c
++    lib/zlib_compress.c
++    lib/zlib_decompress.c
++	lib/x86/cpu_features.c)
