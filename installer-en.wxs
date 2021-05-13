@@ -4,10 +4,13 @@
         <Package Description="Karasunpo" Comments="Measures nominal length/angle" InstallerVersion="200" Compressed="yes" SummaryCodepage="1252" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="DesktopFolder" />
             <Directory Id="ProgramFilesFolder" Name="PFiles">
                 <Directory Id="APPLICATIONROOTDIRECTORY" Name="Karasunpo">
                     <Component Id="karasunpo.exe" Guid="007EE244-D9A1-4B98-ADEA-53042E92B70F">
-                        <File Id="KARASUNPO.EXE" Name="karasunpo.exe" Source="karasunpo\karasunpo.exe" />
+                        <File Id="KARASUNPO.EXE" Name="karasunpo.exe" Source="karasunpo\karasunpo.exe" KeyPath="yes">
+                            <Shortcut Id="KarasunpoDesktopShortcut" Directory="DesktopFolder" Name="Karasunpo" Description="Launch Karasunpo" Advertise="yes" Icon="karasunpo.exe" IconIndex="0" />
+                        </File>
                     </Component>
                     <Component Id="README.txt" Guid="D3EFA8B9-8152-492F-80E3-4DBA1D3C222D">
                         <File Id="README.TXT" Name="README.txt" Source="README.txt" />
@@ -30,12 +33,8 @@
             <Component Id="ApplicationShortcut" Guid="8EF8C514-DF73-4079-970C-89B6B1BF07E1">
                 <Shortcut Id="ApplicationStartMenuShortcut" Name="Karasunpo" Description="Karasunpo" Target="[APPLICATIONROOTDIRECTORY]karasunpo.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
-                <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
-                <Shortcut Id="UninstallProduct"             
-                          Name="Uninstall Karasunpo"
-                          Target="[System64Folder]msiexec.exe"
-                          Arguments="/x [ProductCode]"
-                          Description="Uninstalls Karasunpo" />
+                <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
+                <Shortcut Id="UninstallProduct" Name="Uninstall Karasunpo" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls Karasunpo" />
             </Component>
         </DirectoryRef>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
@@ -49,5 +48,6 @@
         <UIRef Id="WixUI_InstallDir" />
         <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
         <WixVariable Id="WixUILicenseRtf" Value="LICENSE.rtf" />
+        <Icon Id="karasunpo.exe" SourceFile="C:\dev\KarasunpoProject\karasunpo\karasunpo\res\1033_Icon_1.ico" />
     </Product>
 </Wix>
