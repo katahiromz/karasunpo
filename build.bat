@@ -1,3 +1,4 @@
+@rem Building with RosBE
 del CMakeCache.txt
 cmake -DCMAKE_BUILD_TYPE=Release -G Ninja . -DGIF_INCLUDE_DIR:PATH=C:/dev/KarasunpoProject/lib/giflib-5.2.1 -DGIF_LIBRARY:FILEPATH=C:/dev/KarasunpoProject/lib/giflib-5.2.1/libgif.a -DJPEG_INCLUDE_DIR:PATH=C:/dev/KarasunpoProject/lib/jpeg-6b -DJPEG_LIBRARY_RELEASE:FILEPATH=C:/dev/KarasunpoProject/lib/jpeg-6b/libjpeg.a -DPNG_LIBRARY_RELEASE:FILEPATH=C:/dev/KarasunpoProject/lib/lpng1637/libpng.a -DPNG_PNG_INCLUDE_DIR:PATH=C:/dev/KarasunpoProject/lib/lpng1637 -DTIFF_INCLUDE_DIR:PATH=C:/dev/KarasunpoProject/lib/tiff-4.3.0/libtiff -DTIFF_LIBRARY_RELEASE:FILEPATH=C:/dev/KarasunpoProject/lib/tiff-4.3.0/libtiff/libtiff.a;C:/dev/KarasunpoProject/lib/libdeflate/libdeflate.a;C:/dev/KarasunpoProject/lib/jbigkit-2.1/libjbig/libjbig.a -DZLIB_INCLUDE_DIR:PATH=C:/dev/KarasunpoProject/lib/zlib-1.2.11 -DZLIB_LIBRARY_RELEASE:FILEPATH=C:/dev/KarasunpoProject/lib/zlib-1.2.11/libz.a
 ninja
