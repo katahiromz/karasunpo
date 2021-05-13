@@ -31,6 +31,11 @@
                 <Shortcut Id="ApplicationStartMenuShortcut" Name="Karasunpo" Description="Karasunpo" Target="[APPLICATIONROOTDIRECTORY]karasunpo.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+                <Shortcut Id="UninstallProduct"             
+                          Name="Uninstall Karasunpo"
+                          Target="[System64Folder]msiexec.exe"
+                          Arguments="/x [ProductCode]"
+                          Description="Uninstalls Karasunpo" />
             </Component>
         </DirectoryRef>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
