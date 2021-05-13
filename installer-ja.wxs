@@ -48,6 +48,7 @@
         <UIRef Id="WixUI_InstallDir" />
         <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
         <WixVariable Id="WixUILicenseRtf" Value="LICENSE.rtf" />
+        <WixVariable Id="WixUIDialogBmp" Value="installer-dialog.bmp" />
         <Icon Id="karasunpo.exe" SourceFile="C:\dev\KarasunpoProject\karasunpo\karasunpo\res\1033_Icon_1.ico" />
     </Product>
 </Wix>
