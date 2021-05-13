@@ -14,7 +14,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
     {
         MENUITEM "&Open\tCtrl+O", IDM_OPEN
         MENUITEM SEPARATOR
-        POPUP "&Recently Used Files"
+        POPUP "&Recent files"
         {
             MENUITEM "(None)", -1, GRAYED
         }
@@ -23,14 +23,14 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
     }
     POPUP "&Zoom"
     {
-        MENUITEM "Show &Whole Image", IDM_FIT_WHILE
-        MENUITEM "Fit &Horizontally", IDM_FIT_HORIZONTAL
-        MENUITEM "Fit &Vertically", IDM_FIT_VERTICAL
+        MENUITEM "Show &whole image", IDM_FIT_WHILE
+        MENUITEM "Fit &horizontally", IDM_FIT_HORIZONTAL
+        MENUITEM "Fit &vertically", IDM_FIT_VERTICAL
         MENUITEM SEPARATOR
-        MENUITEM "Zoom &In\t+", IDM_ZOOM_IN
-        MENUITEM "Zoom &Out\t-", IDM_ZOOM_OUT
+        MENUITEM "Zoom &in\t+", IDM_ZOOM_IN
+        MENUITEM "Zoom &out\t-", IDM_ZOOM_OUT
         MENUITEM SEPARATOR
-        MENUITEM "Zoom &Rate...", IDM_ZOOM_RATE
+        MENUITEM "Zoom &rate...", IDM_ZOOM_RATE
         MENUITEM SEPARATOR
         MENUITEM "10%", IDM_ZOOM_10PER
         MENUITEM "25%", IDM_ZOOM_25PER
@@ -44,7 +44,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
     }
     POPUP "&Segment"
     {
-        MENUITEM "In&vert", IDM_SEG_COLOR_AUTO
+        MENUITEM "In&verted color", IDM_SEG_COLOR_AUTO
         MENUITEM SEPARATOR
         MENUITEM "&Red", IDM_SEG_COLOR_RED
         MENUITEM "&Green", IDM_SEG_COLOR_GREEN
@@ -52,10 +52,10 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
     }
     POPUP "&Page"
     {
-        MENUITEM "&Next Page\tAlt+Right", IDM_NEXT_PAGE
-        MENUITEM "&Previous Page\tAlt+Left", IDM_PREV_PAGE
+        MENUITEM "&Next page\tAlt+Right", IDM_NEXT_PAGE
+        MENUITEM "&Previous page\tAlt+Left", IDM_PREV_PAGE
         MENUITEM SEPARATOR
-        MENUITEM "&Go To Page...\tCtrl+G", IDM_GO_TO_PAGE
+        MENUITEM "&Go to page...\tCtrl+G", IDM_GO_TO_PAGE
     }
     POPUP "&Help"
     {
@@ -67,14 +67,14 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
 {
     POPUP "Popup"
     {
-        MENUITEM "Show &Whole Image", IDM_FIT_WHILE
-        MENUITEM "Fit &Horizontally", IDM_FIT_HORIZONTAL
-        MENUITEM "Fit &Vertically", IDM_FIT_VERTICAL
+        MENUITEM "Show &whole image", IDM_FIT_WHILE
+        MENUITEM "Fit &horizontally", IDM_FIT_HORIZONTAL
+        MENUITEM "Fit &vertically", IDM_FIT_VERTICAL
         MENUITEM SEPARATOR
-        MENUITEM "Zoom &In\t+", IDM_ZOOM_IN
-        MENUITEM "Zoom &Out\t-", IDM_ZOOM_OUT
+        MENUITEM "Zoom &in\t+", IDM_ZOOM_IN
+        MENUITEM "Zoom &out\t-", IDM_ZOOM_OUT
         MENUITEM SEPARATOR
-        MENUITEM "Zoom &Rate...", IDM_ZOOM_RATE
+        MENUITEM "Zoom &rate...", IDM_ZOOM_RATE
         MENUITEM SEPARATOR
         MENUITEM "10%", IDM_ZOOM_10PER
         MENUITEM "25%", IDM_ZOOM_25PER
@@ -98,7 +98,7 @@ FONT 9, "MS Shell Dlg"
 {
     ICON 1, -1, 14, 14, 0, 0
     LTEXT "karasunpo ver.1.0", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
-    LTEXT "Copyright (C) 2015-2019 Katayama Hirofumi MZ", -1, 40, 26, 165, 8
+    LTEXT "Copyright (C) 2015-2021 Katayama Hirofumi MZ", -1, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
 
@@ -107,7 +107,7 @@ CAPTION "Input Zoom Rate"
 STYLE DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION
 FONT 9, "MS Shell Dlg"
 {
-    RTEXT "Zoom &Rate:", -1, 5, 7, 55, 12
+    RTEXT "Zoom &rate:", -1, 5, 7, 55, 12
     CONTROL "100%", edt1, "EDIT", ES_RIGHT | WS_BORDER | WS_TABSTOP, 69, 5, 30, 14
     DEFPUSHBUTTON "OK", IDC_PAN, 5, 30, 45, 14
     PUSHBUTTON "Cancel", IDC_CROSS2, 55, 30, 45, 14
@@ -131,7 +131,7 @@ FONT 11, "MS Shell Dlg"
 {
     CTEXT "** Get Started **", -1, 5, 5, 85, 14
     LTEXT "This software can measure the nominal distance between two points and/or an angle on an image file.\n\nClick 'Next' button.", -1, 5, 20, 85, 60
-    AUTOCHECKBOX "&Don't Show This\nNext Time", chx1, 5, 96, 85, 26, BS_NOTIFY | BS_MULTILINE
+    AUTOCHECKBOX "&Don't show this\nnext time", chx1, 5, 96, 85, 26, BS_NOTIFY | BS_MULTILINE
     DEFPUSHBUTTON "&Next", psh2, 50, 130, 40, 14
 }
 
@@ -154,10 +154,10 @@ STYLE DS_CONTROL | DS_MODALFRAME | WS_CHILD | WS_CAPTION
 FONT 11, "MS Shell Dlg"
 {
     CTEXT "** Measuring Type **", -1, 5, 5, 85, 14
-    LTEXT "Select A Measuring Type:", -1, 5, 20, 85, 16
+    LTEXT "Select a measuring type:", -1, 5, 20, 85, 16
     AUTORADIOBUTTON "&Length of one segment", rad1, 5, 40, 85, 15, BS_MULTILINE | WS_TABSTOP
     AUTORADIOBUTTON "&Inclination of one segment", rad2, 5, 61, 85, 20, BS_MULTILINE | WS_TABSTOP
-    AUTORADIOBUTTON "&Angle, formed by two segments", rad3, 8, 85, 85, 20, BS_MULTILINE | WS_TABSTOP
+    AUTORADIOBUTTON "&Angle, formed by two segments", rad3, 5, 85, 85, 20, BS_MULTILINE | WS_TABSTOP
     AUTOCHECKBOX "&Radian", chx1, 5, 110, 85, 14
     PUSHBUTTON "&Back", psh1, 5, 130, 40, 14
     DEFPUSHBUTTON "&Next", psh2, 50, 130, 40, 14
@@ -168,9 +168,9 @@ CAPTION "Standard Segment"
 STYLE DS_CONTROL | DS_MODALFRAME | WS_CHILD | WS_CAPTION
 FONT 11, "MS Shell Dlg"
 {
-    CTEXT "** Standard Segment **", -1, 5, 5, 85, 14
-    LTEXT "Please input the standard segment on the image by dragging.\n\nThe standard segment will become the nominal length or angle standard on the image. Longer is better.\n\n* You can zoom the image in/out by Ctrl+Wheel rotation.", -1, 5, 20, 85, 90
-    AUTOCHECKBOX "&Draw Auxiliary Circle", chx1, 5, 115, 85, 14, BS_NOTIFY
+    CTEXT "** Standard Segment **", -1, 5, 2, 85, 14
+    LTEXT "    Please input the standard segment on the image by dragging.\n    The standard segment will become the nominal length or angle standard on the image. Longer is better.\n    * You can zoom the image in/out by Ctrl+Wheel rotation.", -1, 5, 18, 85, 95
+    AUTOCHECKBOX "&Draw auxiliary circle", chx1, 5, 114, 85, 14, BS_NOTIFY
     PUSHBUTTON "&Back", psh1, 5, 130, 40, 14
     DEFPUSHBUTTON "&Next", psh2, 50, 130, 40, 14, WS_DISABLED
 }
@@ -199,7 +199,7 @@ FONT 11, "MS Shell Dlg"
     LTEXT "&Length:", stc1, 5, 50, 85, 14
     EDITTEXT edt1, 5, 65, 85, 14, ES_READONLY | ES_NOHIDESEL | ES_AUTOHSCROLL | ES_RIGHT
     PUSHBUTTON "&Copy to clipboard!", psh3, 5, 80, 85, 30, BS_MULTILINE
-    AUTOCHECKBOX "&Draw Auxiliary Circle", chx1, 5, 115, 85, 14, BS_NOTIFY
+    AUTOCHECKBOX "&Draw auxiliary circle", chx1, 5, 115, 85, 14, BS_NOTIFY
     PUSHBUTTON "&Back", psh1, 5, 130, 40, 14
     PUSHBUTTON "E&xit", psh2, 50, 130, 40, 14
 }
