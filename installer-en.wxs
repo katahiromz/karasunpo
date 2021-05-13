@@ -37,12 +37,19 @@
                 <Shortcut Id="UninstallProduct" Name="Uninstall Karasunpo" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls Karasunpo" />
             </Component>
         </DirectoryRef>
+        <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+            <Component Id="ApplicationShortcut2" Guid="8EF8C514-DF73-4079-970C-89B6B1BF07E2">
+                <Shortcut Id="UninstallProduct2" Name="Uninstall" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstall Karasunpo" />
+                <RemoveFolder Id="APPLICATIONROOTDIRECTORY" On="uninstall" />
+            </Component>
+        </DirectoryRef>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="karasunpo.exe" />
             <ComponentRef Id="LICENSE.txt" />
             <ComponentRef Id="README.txt" />
             <ComponentRef Id="PDFIUM.DLL" />
             <ComponentRef Id="ApplicationShortcut" />
+            <ComponentRef Id="ApplicationShortcut2" />
         </Feature>
         <UI />
         <UIRef Id="WixUI_InstallDir" />
