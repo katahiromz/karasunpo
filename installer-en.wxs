@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="14D911F7-0200-4AE9-AC47-DA8C4CFE6A33" Name="画像カラスンポ" Language="1041" Version="1.0" Manufacturer="片山博文MZ" UpgradeCode="FF0559F0-58D7-470A-BB46-F5A79ACD934E" Codepage="932">
-        <Package Description="画像カラスンポ" Comments="名目上の寸法または角度を計測" InstallerVersion="200" Compressed="yes" SummaryCodepage="932" />
+    <Product Id="90034515-857F-42F2-9FE6-A9869344F11B" Name="Karasunpo" Language="1033" Version="1.0" Manufacturer="Katayama Hirofumi MZ" UpgradeCode="8016CEA1-CD7B-44A2-A2AF-2B0781212677" Codepage="1252">
+        <Package Description="Karasunpo" Comments="Measures nominal length/angle" InstallerVersion="200" Compressed="yes" SummaryCodepage="1252" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder" Name="PFiles">
-                <Directory Id="Karasunpo" Name="Karasunpo">
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="Karasunpo">
                     <Component Id="karasunpo.exe" Guid="007EE244-D9A1-4B98-ADEA-53042E92B70F">
                         <File Id="KARASUNPO.EXE" Name="karasunpo.exe" Source="karasunpo\karasunpo.exe" />
                     </Component>
-                    <Component Id="READMEJP.txt" Guid="D3EFA8B9-8152-492F-80E3-4DBA1D3C222D">
-                        <File Id="READMEJP.TXT" Name="READMEJP.txt" Source="READMEJP.txt" />
+                    <Component Id="README.txt" Guid="D3EFA8B9-8152-492F-80E3-4DBA1D3C222D">
+                        <File Id="README.TXT" Name="README.txt" Source="README.txt" />
                     </Component>
                     <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
                         <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
@@ -22,16 +22,27 @@
                     </Directory>
                 </Directory>
             </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="Karasunpo" />
+            </Directory>
         </Directory>
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="8EF8C514-DF73-4079-970C-89B6B1BF07E1">
+                <Shortcut Id="ApplicationStartMenuShortcut" Name="Karasunpo" Description="Karasunpo" Target="[APPLICATIONROOTDIRECTORY]karasunpo.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+                <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="karasunpo.exe" />
             <ComponentRef Id="LICENSE.txt" />
-            <ComponentRef Id="READMEJP.txt" />
+            <ComponentRef Id="README.txt" />
             <ComponentRef Id="PDFIUM.DLL" />
+            <ComponentRef Id="ApplicationShortcut" />
         </Feature>
         <UI />
         <UIRef Id="WixUI_InstallDir" />
-        <Property Id="WIXUI_INSTALLDIR" Value="Karasunpo" />
+        <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
         <WixVariable Id="WixUILicenseRtf" Value="LICENSE.rtf" />
     </Product>
 </Wix>

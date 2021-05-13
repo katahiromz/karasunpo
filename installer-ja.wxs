@@ -5,15 +5,15 @@
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder" Name="PFiles">
-                <Directory Id="Karasunpo" Name="Karasunpo">
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="Karasunpo">
                     <Component Id="karasunpo.exe" Guid="007EE244-D9A1-4B98-ADEA-53042E92B70F">
                         <File Id="KARASUNPO.EXE" Name="karasunpo.exe" Source="karasunpo\karasunpo.exe" />
                     </Component>
-                    <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
-                        <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
-                    </Component>
                     <Component Id="READMEJP.txt" Guid="D3EFA8B9-8152-492F-80E3-4DBA1D3C222D">
                         <File Id="READMEJP.TXT" Name="READMEJP.txt" Source="READMEJP.txt" />
+                    </Component>
+                    <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
+                        <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
                     </Component>
                     <Directory Id="X86" Name="x86">
                         <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
@@ -22,16 +22,27 @@
                     </Directory>
                 </Directory>
             </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="画像カラスンポ" />
+            </Directory>
         </Directory>
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="8EF8C514-DF73-4079-970C-89B6B1BF07E1">
+                <Shortcut Id="ApplicationStartMenuShortcut" Name="画像カラスンポ" Description="画像カラスンポ" Target="[APPLICATIONROOTDIRECTORY]karasunpo.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+                <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="karasunpo.exe" />
             <ComponentRef Id="LICENSE.txt" />
             <ComponentRef Id="READMEJP.txt" />
             <ComponentRef Id="PDFIUM.DLL" />
+            <ComponentRef Id="ApplicationShortcut" />
         </Feature>
         <UI />
         <UIRef Id="WixUI_InstallDir" />
-        <Property Id="WIXUI_INSTALLDIR" Value="Karasunpo" />
+        <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
         <WixVariable Id="WixUILicenseRtf" Value="LICENSE.rtf" />
     </Product>
 </Wix>
