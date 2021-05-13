@@ -97,7 +97,7 @@ STYLE DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION
 FONT 9, "ＭＳ Ｐゴシック"
 {
     ICON 1, -1, 14, 14, 0, 0
-    LTEXT "画像カラスンポ ver.0.9", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
+    LTEXT "画像カラスンポ ver.1.0", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
     LTEXT "Copyright (C) 2015-2019 片山博文MZ", -1, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
@@ -208,8 +208,8 @@ FONT 12, "ＭＳ Ｐゴシック"
 // RT_VERSION
 
 1 VERSIONINFO
-FILEVERSION     0, 9, 0, 0
-PRODUCTVERSION  0, 9, 0, 0
+FILEVERSION     1, 0, 0, 0
+PRODUCTVERSION  1, 0, 0, 0
 FILEOS          0x40004
 FILETYPE        0x1
 {
@@ -219,10 +219,10 @@ FILETYPE        0x1
         {
             VALUE "CompanyName", "片山博文MZ\0"
             VALUE "FileDescription", "画像カラスンポ\0"
-            VALUE "FileVersion", "0.9\0"
+            VALUE "FileVersion", "1.0\0"
             VALUE "LegalCopyright", "Copyright (C) 2015-2021 片山博文MZ\0"
             VALUE "ProductName", "画像カラスンポ\0"
-            VALUE "ProductVersion", "0.9\0"
+            VALUE "ProductVersion", "1.0\0"
         }
     }
     BLOCK "VarFileInfo"
@@ -236,7 +236,7 @@ FILETYPE        0x1
 
 STRINGTABLE
 {
-    1, "画像カラスンポ ver.0.9 by 片山博文MZ"
+    1, "画像カラスンポ ver.1.0 by 片山博文MZ"
     2, "画像カラスンポ"
     3, "PDFまたは画像ファイルを開く"
     4, "PDF文書か画像ファイル|*.pdf;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|PDF文書 (*.pdf)|*.pdf|画像ファイル (*.jpg;*.png;*.gif;*.tif;*.bmp)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|JPEG画像 (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG画像 (*.png)|*.png|GIF画像 (*.gif)|*.gif|TIFF画像 (*.tif;*.tiff)|*.tif;*.tiff|ビットマップ画像 (*.bmp;*.dib)|*.bmp;*.dib|すべてのファイル (*.*)|*.*|"
