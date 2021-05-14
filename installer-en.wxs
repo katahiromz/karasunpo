@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product Id="90034515-857F-42F2-9FE6-A9869344F11B" Name="Karasunpo" Language="1033" Version="1.0" Manufacturer="Katayama Hirofumi MZ" UpgradeCode="8016CEA1-CD7B-44A2-A2AF-2B0781212677" Codepage="1252">
         <Package Description="Karasunpo" Comments="Measures nominal length/angle" InstallerVersion="200" Compressed="yes" SummaryCodepage="1252" />
-        <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
+        <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" CompressionLevel="high" />
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="DesktopFolder" />
             <Directory Id="ProgramFilesFolder" Name="PFiles">
