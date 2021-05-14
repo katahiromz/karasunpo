@@ -35,6 +35,8 @@
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
                 <Shortcut Id="UninstallProduct" Name="Uninstall Karasunpo" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls Karasunpo" />
+                <Shortcut Id="README.TXT" Name="README.txt" Target="[APPLICATIONROOTDIRECTORY]README.txt" Description="Read me first" />
+                <Shortcut Id="LICENSE.TXT" Name="LICENSE.txt" Target="[APPLICATIONROOTDIRECTORY]LICENSE.txt" Description="License" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
