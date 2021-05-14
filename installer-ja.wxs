@@ -58,5 +58,6 @@
         <WixVariable Id="WixUIBannerBmp" Value="installer-banner.bmp" />
         <WixVariable Id="WixUIDialogBmp" Value="installer-dialog.bmp" />
         <Icon Id="karasunpo.exe" SourceFile="C:\dev\KarasunpoProject\karasunpo\karasunpo\res\1033_Icon_1.ico" />
+        <Property Id="ARPPRODUCTICON" Value="karasunpo.exe" />
     </Product>
 </Wix>
