@@ -204,6 +204,18 @@ FONT 12, "ＭＳ Ｐゴシック"
     PUSHBUTTON "終了(&X)", psh2, 50, 130, 40, 14
 }
 
+IDD_PASSWORD DIALOG 0, 0, 165, 70
+CAPTION "画像カラスンポ"
+STYLE DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION
+FONT 9, "MS UI Gothic"
+{
+    LTEXT "PDF文書のパスワードを入力して下さい。", -1, 5, 5, 155, 16
+    LTEXT "パスワード(&P):", -1, 5, 30, 50, 14
+    EDITTEXT edt1, 60, 30, 100, 14, ES_AUTOHSCROLL | ES_PASSWORD
+    DEFPUSHBUTTON "OK", IDC_PAN, 35, 50, 60, 14
+    PUSHBUTTON "キャンセル", IDC_CROSS2, 100, 50, 60, 14
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // RT_VERSION
 
@@ -252,6 +264,7 @@ STRINGTABLE
     14, "rad"
     15, "PDF入力モジュールが読み込めませんでした。"
     16, "(なし)"
+    17, "パスワードが違います。文書を開けません。"
 }
 
 //////////////////////////////////////////////////////////////////////////////

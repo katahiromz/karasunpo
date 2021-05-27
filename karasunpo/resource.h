@@ -16,6 +16,8 @@
 #define IDC_UPDOWN                          4
 #define IDC_MOVE                            5
 
+#define IDD_PASSWORD                        1000
+
 #define IDM_EXIT                            1
 #define IDM_ABOUT                           2
 #define IDM_OPEN                            3

@@ -1,5 +1,12 @@
+option(KARASUNPO_CONSOLE "Make Karasunpo console app" OFF)
+
 # karasunpo.exe
-add_executable(karasunpo WIN32 karasunpo.cpp karasunpo_res.rc)
+if(KARASUNPO_CONSOLE)
+    add_executable(karasunpo karasunpo.cpp karasunpo_res.rc)
+    target_compile_definitions(karasunpo PRIVATE KARASUNPO_CONSOLE=1)
+else()
+    add_executable(karasunpo WIN32 karasunpo.cpp karasunpo_res.rc)
+endif()
 target_include_directories(karasunpo PRIVATE
     ${GIF_INCLUDE_DIR}
     ${JPEG_INCLUDE_DIRS}

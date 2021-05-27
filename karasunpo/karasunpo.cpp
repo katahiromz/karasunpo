@@ -373,12 +373,74 @@ struct WinApp {
         return INT(msg.wParam);
     } // run
 
+    struct PASSWORD_DLG
+    {
+        LPSTR text;
+        INT cch;
+    };
+
+    static INT_PTR CALLBACK
+    PasswordDlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        static PASSWORD_DLG *s_data = NULL;
+        switch (uMsg)
+        {
+        case WM_INITDIALOG:
+            s_data = (PASSWORD_DLG *)lParam;
+            SetDlgItemTextA(hwnd, edt1, s_data->text);
+            CenterDialog(hwnd);
+            return TRUE;
+        case WM_COMMAND:
+            switch (LOWORD(wParam))
+            {
+            case IDOK:
+                GetDlgItemTextA(hwnd, edt1, s_data->text, s_data->cch);
+                EndDialog(hwnd, IDOK);
+                break;
+            case IDCANCEL:
+                EndDialog(hwnd, IDCANCEL);
+                break;
+            }
+        }
+        return FALSE;
+    }
+
+    BOOL PasswordBoxA(HWND hwnd, LPSTR text, INT cch)
+    {
+        PASSWORD_DLG data = { text, cch };
+        return DialogBoxParamW(m_hInst, MAKEINTRESOURCEW(IDD_PASSWORD),
+                               hwnd, PasswordDlgProc, (LPARAM)&data) == IDOK;
+    }
+
     HBITMAP loadPdf(LPCSTR pszFileName, INT nPageIndex = 0) {
         HBITMAP hbm = NULL;
-        FPDF_DOCUMENT pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, NULL);
-        if (pdf_doc != NULL) {
+        FPDF_DOCUMENT pdf_doc;
+        CHAR password[128] = "";
+        DWORD error;
+
+        pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, NULL);
+        error = m_pdfium.FPDF_GetLastError();
+        while (!pdf_doc && error == FPDF_ERR_PASSWORD)
+        {
+            if (PasswordBoxA(m_hWnd, password, _countof(password)))
+            {
+                pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, password);
+                error = m_pdfium.FPDF_GetLastError();
+                ZeroMemory(password, sizeof(password));
+                if (!pdf_doc && error == FPDF_ERR_PASSWORD)
+                {
+                    CenterMessageBox(m_hWnd, loadString(17), NULL, MB_ICONERROR);
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (pdf_doc) {
             FPDF_PAGE pdf_page = m_pdfium.FPDF_LoadPage(pdf_doc, nPageIndex);
-            if (pdf_page != NULL) {
+            if (pdf_page) {
                 double page_width = m_pdfium.FPDF_GetPageWidth(pdf_page);
                 double page_height = m_pdfium.FPDF_GetPageHeight(pdf_page);
                 HDC hDC = ::GetDC(m_hWnd);
