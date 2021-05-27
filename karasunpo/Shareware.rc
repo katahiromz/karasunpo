@@ -1,0 +1,96 @@
+////////////////////////////////////////////////////////////////////////////
+// Shareware.rc -- MZC3 shareware maker for Win32
+// This file is part of MZC3.  See file "ReadMe.txt" and "License.txt".
+////////////////////////////////////////////////////////////////////////////
+
+#ifndef MZC_NO_SHAREWARE
+#include <windows.h>
+#include <dlgs.h>
+
+////////////////////////////////////////////////////////////////////////////
+
+// TODO: Is this application Japanese?
+#define JAPAN
+
+////////////////////////////////////////////////////////////////////////////
+
+#if defined(JAPAN) && defined(__BORLANDC__) && (__BORLANDC__ <= 0x0551)
+    #error Your resource compiler does not support UTF-8 code page. You lose.
+#endif
+
+// UTF-8
+#pragma code_page(65001)
+
+////////////////////////////////////////////////////////////////////////////
+
+32731 CURSOR "hand.cur"
+
+////////////////////////////////////////////////////////////////////////////
+// English
+
+// English (U.S.)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+STRINGTABLE
+{
+    32731, "Password mismatched! Please enter the correct password."
+    32732, "This software is a shareware. The deadline of trial period comes in %u days. To continue using it, you have to register the shareware password."
+    32733, "This software is a shareware. The deadline of trial period comes in %u hours and %u minutes. To continue using it, you have to register the shareware password."
+    32734, "The deadline of trial period has come. To continue using it, you have to register the shareware password."
+    32735, "The shareware password was registered. Thanks!"
+    32736, "The registry is broken or inaccessible."
+    32737, "Sorry, this command requires registering the shareware password."
+}
+
+32731 DIALOG 0, 0, 240, 185
+STYLE DS_MODALFRAME | DS_CENTER | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Register the shareware password"
+FONT 9, "Arial"
+{
+    CONTROL "(The current status may be shown here)", edt1, "EDIT", ES_LEFT | ES_READONLY | ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 5, 5, 230, 120
+    // TODO: Specify the URL for the shareware.
+    CONTROL "http://www.vector.co.jp/vpack/browse/person/an058988.html", stc1, "STATIC", SS_LEFT | SS_NOPREFIX | SS_NOTIFY | WS_CHILD | WS_VISIBLE | WS_GROUP, 20, 130, 200, 12
+    CONTROL "Password:", -1, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 5, 147, 65, 12
+    // TODO: Add ES_PASSWORD, ES_UPPERCASE, ES_LOWERCASE styles if necessary.
+    CONTROL "", edt2, "EDIT", ES_LEFT | ES_AUTOHSCROLL | ES_UPPERCASE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 75, 145, 100, 14
+    CONTROL "&Register", IDOK, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 180, 145, 55, 14
+    CONTROL "&Close", IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 90, 165, 60, 14
+}
+
+////////////////////////////////////////////////////////////////////////////
+// Japanese
+
+#ifdef JAPAN
+    // Japanese
+    LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+
+    STRINGTABLE
+    {
+        32731, "ライセンス キーが間違っています。"
+        32732, "このソフトウェアは、シェアウェアです。残り%u日で試用期限が切れます。継続して利用したい場合は、ライセンス キーを登録する必要があります。"
+        32733, "このソフトウェアは、シェアウェアです。残り%u時間%02u分で試用期限が切れます。継続して利用したい場合は、ライセンス キーを登録する必要があります。"
+        32734, "試用期限が切れました。継続して利用したい場合は、ライセンス キーを登録する必要があります。"
+        32735, "ライセンス キーが登録されました。ありがとうございます。"
+        32736, "レジストリが壊れているか、アクセスできません。"
+        32737, "申し訳ありませんが、このコマンドを実行するには、ライセンス キーを登録する必要があります。"
+    }
+
+    32731 DIALOG 0, 0, 240, 185
+    STYLE DS_MODALFRAME | DS_CENTER | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+    CAPTION "ライセンス キーの登録"
+    FONT 9, "ＭＳ Ｐゴシック"
+    {
+        CONTROL "(ここに現在の状態が表示されます)", edt1, "EDIT", ES_LEFT | ES_READONLY | ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 5, 5, 230, 120
+        // TODO: シェアウェア用のURLを指定して下さい。
+        CONTROL "http://www.vector.co.jp/vpack/browse/person/an058988.html", stc1, "STATIC", SS_LEFT | SS_NOPREFIX | SS_NOTIFY | WS_CHILD | WS_VISIBLE | WS_GROUP, 20, 130, 200, 12
+        CONTROL "ライセンス キー(&K):", -1, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 5, 147, 65, 12
+        // TODO: 必要ならば、ES_PASSWORD, ES_UPPERCASE, ES_LOWERCASEスタイルを追加して下さい。
+        CONTROL "", edt2, "EDIT", ES_LEFT | ES_AUTOHSCROLL | ES_UPPERCASE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 75, 145, 100, 14
+        CONTROL "登録(&R)", IDOK, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 180, 145, 55, 14
+        CONTROL "閉じる(&C)", IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 90, 165, 60, 14
+    }
+#endif  // def JAPAN
+
+////////////////////////////////////////////////////////////////////////////
+
+#endif  // ndef MZC_NO_SHAREWARE

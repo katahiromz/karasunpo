@@ -5,6 +5,17 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.hpp"
+#ifndef NO_SHAREWARE
+    #include "Shareware.hpp"
+    SW_Shareware g_shareware(
+        /* company registry key */      TEXT("Katayama Hirofumi MZ"),
+        /* application registry key */  TEXT("karasunpo"),
+        /* password hash */
+        "13369e9c89df8e20a425d5d2ef6ada8a5f3dd676dc8388e53c3118e3e5331621",
+        /* trial days */                4,
+        /* salt string */               "katahiromz_karasunpo",
+        /* version string */            "");
+#endif
 
 #ifndef M_PI
     #define M_PI  3.14159265358979323846
@@ -2779,9 +2790,20 @@ WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (!pApp->onCreate()) {
             return -1;
         }
+#ifndef NO_SHAREWARE
+        PostMessageW(hWnd, WM_COMMAND, 9999, 0);
+#endif
         break;
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
+#ifndef NO_SHAREWARE
+        case 9999:
+            if (!g_shareware.Start(hWnd))
+            {
+                DestroyWindow(hWnd);
+            }
+            break;
+#endif
         case IDM_EXIT:
             pApp->onExit();
             break;
