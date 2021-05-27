@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////
-                    karasunpo
+             Karasunpo Pro (Shareware)
         by Katayama Hirofumi MZ (karahiromz)
 /////////////////////////////////////////////////////
 
@@ -36,12 +36,16 @@ angle on the image.
 /////////////////////////////////////////////////////
 // Supported Platforms
 
- * Windows XP/Vista/7/8.1/10
+ * Windows Vista/7/8.1/10
 
 /////////////////////////////////////////////////////
 // License Agreement
 
-See LICENSE.txt file.
+Karasunpo Pro is a shareware of $10 USD.
+
+Please contact me via e-mail and pay $10 via PayPal.
+
+E-mail: katayama.hirofumi.mz@gmail.com
 
 /////////////////////////////////////////////////////
 // Contact
