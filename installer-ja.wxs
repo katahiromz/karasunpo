@@ -38,9 +38,9 @@
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
                 <Shortcut Id="UninstallProduct" Name="画像カラスンポのアンインストール" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="画像カラスンポをアンインストールする" />
-                <Shortcut Id="READMEJP.TXT" Name="READMEJP.txt" Target="[APPLICATIONROOTDIRECTORY]READMEJP.txt" Description="はじめにお読み下さい" />
+                <Shortcut Id="READMEJP.TXT" Name="はじめにお読み下さい" Target="[APPLICATIONROOTDIRECTORY]READMEJP.txt" Description="はじめにお読み下さい" />
                 <Shortcut Id="LICENSE.TXT" Name="LICENSE.txt" Target="[APPLICATIONROOTDIRECTORY]LICENSE.txt" Description="使用許諾契約書" />
-                <Shortcut Id="karasunpo_manual_ja.pdf" Name="マニュアル(PDF)" />
+                <Shortcut Id="karasunpo_manual_ja.pdf" Name="マニュアル(PDF)" Description="マニュアル(PDF)" Target="[APPLICATIONROOTDIRECTORY]karasunpo_manual_ja.pdf" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
