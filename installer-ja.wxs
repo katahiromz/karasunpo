@@ -18,6 +18,9 @@
                     <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
                         <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
                     </Component>
+                    <Component Id="karasunpo_manual_ja.pdf" Guid="7EBCD1AC-5609-4867-9E55-3A35BA953C48">
+                        <File Id="karasunpo_manual_ja.pdf" Name="karasunpo_manual_ja.pdf" Source="karasunpo_manual_ja.pdf" />
+                    </Component>
                     <Directory Id="X86" Name="x86">
                         <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
                             <File Id="PDFIUM.DLL" Name="pdfium.dll" Source="katahiromz_pdfium\x86\pdfium.dll" />
@@ -37,6 +40,7 @@
                 <Shortcut Id="UninstallProduct" Name="画像カラスンポのアンインストール" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="画像カラスンポをアンインストールする" />
                 <Shortcut Id="READMEJP.TXT" Name="READMEJP.txt" Target="[APPLICATIONROOTDIRECTORY]READMEJP.txt" Description="はじめにお読み下さい" />
                 <Shortcut Id="LICENSE.TXT" Name="LICENSE.txt" Target="[APPLICATIONROOTDIRECTORY]LICENSE.txt" Description="使用許諾契約書" />
+                <Shortcut Id="karasunpo_manual_ja.pdf" Name="マニュアル(PDF)" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
@@ -52,6 +56,7 @@
             <ComponentRef Id="PDFIUM.DLL" />
             <ComponentRef Id="ApplicationShortcut" />
             <ComponentRef Id="ApplicationShortcut2" />
+            <ComponentRef Id="karasunpo_manual_ja.pdf" />
         </Feature>
         <UI />
         <UIRef Id="WixUI_InstallDir" />
