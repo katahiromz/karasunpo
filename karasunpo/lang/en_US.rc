@@ -97,7 +97,7 @@ STYLE DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION
 FONT 9, "MS Shell Dlg"
 {
     ICON 1, -1, 14, 14, 0, 0
-    LTEXT "karasunpo ver.1.1", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
+    LTEXT "karasunpo ver.1.2", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
     LTEXT "Copyright (C) 2015-2021 Katayama Hirofumi MZ", -1, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
@@ -260,8 +260,8 @@ IDC_MOVE CURSOR "res/1033_Cursor_5.cur"
 // RT_VERSION
 
 1 VERSIONINFO
-FILEVERSION     1, 1, 0, 0
-PRODUCTVERSION  1, 1, 0, 0
+FILEVERSION     1, 2, 0, 0
+PRODUCTVERSION  1, 2, 0, 0
 FILEOS          0x40004
 FILETYPE        0x1
 {
@@ -271,10 +271,10 @@ FILETYPE        0x1
         {
             VALUE "CompanyName", "Katayama Hirofumi MZ\0"
             VALUE "FileDescription", "karasunpo\0"
-            VALUE "FileVersion", "1.1\0"
+            VALUE "FileVersion", "1.2\0"
             VALUE "LegalCopyright", "Copyright (C) 2015-2021 Katayama Hirofumi MZ\0"
             VALUE "ProductName", "karasunpo\0"
-            VALUE "ProductVersion", "1.1\0"
+            VALUE "ProductVersion", "1.2\0"
         }
     }
     BLOCK "VarFileInfo"
@@ -288,7 +288,7 @@ FILETYPE        0x1
 
 STRINGTABLE
 {
-    1, "karasunpo ver.1.1 by katahiromz"
+    1, "karasunpo ver.1.2 by katahiromz"
     2, "karasunpo"
     3, "Open an image file"
     4, "PDF Documents or Image Files|*.pdf;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|PDF Documents (*.pdf)|*.pdf|Image Files (*.jpg;*.png;*.gif;*.tif;*.bmp)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|JPEG Images (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG Images (*.png)|*.png|GIF Images (*.gif)|*.gif|TIFF Images (*.tif;*.tiff)|*.tif;*.tiff|Bitmap Images (*.bmp;*.dib)|*.bmp;*.dib|All Files (*.*)|*.*|"

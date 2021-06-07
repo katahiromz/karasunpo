@@ -14,7 +14,7 @@
         "13369e9c89df8e20a425d5d2ef6ada8a5f3dd676dc8388e53c3118e3e5331621",
         /* trial days */                4,
         /* salt string */               "katahiromz_karasunpo",
-        /* version string */            "");
+        /* version string */            "1.2");
 #endif
 
 #ifndef M_PI

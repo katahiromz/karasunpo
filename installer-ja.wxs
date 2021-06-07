@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="EA918EB8-995C-4706-B8EE-66578B61413A" Name="画像カラスンポPro" Language="1041" Version="1.1" Manufacturer="片山博文MZ" UpgradeCode="5614CFB3-4F61-4398-B6E1-3911AA34C07F" Codepage="932">
+    <Product Id="EA918EB8-995C-4706-B8EE-66578B61413A" Name="画像カラスンポPro" Language="1041" Version="1.2" Manufacturer="片山博文MZ" UpgradeCode="5614CFB3-4F61-4398-B6E1-3911AA34C07F" Codepage="932">
         <Package Description="画像カラスンポPro" Comments="名目上の寸法または角度を計測" InstallerVersion="200" Compressed="yes" SummaryCodepage="932" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" CompressionLevel="high" />
         <Directory Id="TARGETDIR" Name="SourceDir">
