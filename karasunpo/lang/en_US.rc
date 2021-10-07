@@ -135,7 +135,7 @@ FONT 11, "MS Shell Dlg"
     DEFPUSHBUTTON "&Next", psh2, 50, 130, 40, 14
 }
 
-101 DIALOG 0, 0, 95, 150
+101 DIALOG 0, 0, 95, 200
 CAPTION "Open A File"
 STYLE DS_CONTROL | DS_MODALFRAME | WS_CHILD | WS_CAPTION
 FONT 11, "MS Shell Dlg"
@@ -144,8 +144,13 @@ FONT 11, "MS Shell Dlg"
     LTEXT "Please open your image file by this software and click 'Next'.\n\n* You can drop the file here to open.", -1, 5, 20, 85, 60
     PUSHBUTTON "&Open...", psh3, 5, 85, 85, 14
     LTEXT "", stc1, 5, 100, 85, 25, SS_PATHELLIPSIS | NOT WS_GROUP
-    PUSHBUTTON "&Back", psh1, 5, 130, 40, 14
-    DEFPUSHBUTTON "&Next", psh2, 50, 130, 40, 14, WS_DISABLED
+    LTEXT "&Rotation:", -1, 5, 132, 36, 10
+    EDITTEXT edt1, 50, 130, 40, 12, ES_NOHIDESEL | ES_AUTOHSCROLL | ES_RIGHT
+    CONTROL "", scr1, "msctls_updown32", UDS_NOTHOUSANDS | UDS_ARROWKEYS | UDS_AUTOBUDDY | UDS_ALIGNRIGHT | UDS_SETBUDDYINT, 63, 165, 12, 20
+    LTEXT "Bri&ghtness:", -1, 5, 151, 41, 11
+    COMBOBOX cmb1, 50, 150, 40, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON "&Back", psh1, 5, 180, 40, 14
+    DEFPUSHBUTTON "&Next", psh2, 50, 180, 40, 14, WS_DISABLED
 }
 
 102 DIALOG 0, 0, 95, 150

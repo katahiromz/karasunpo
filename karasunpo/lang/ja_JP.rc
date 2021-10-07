@@ -135,7 +135,7 @@ FONT 12, "ＭＳ Ｐゴシック"
     DEFPUSHBUTTON "次へ(&N)", psh2, 50, 130, 40, 14
 }
 
-101 DIALOG 0, 0, 95, 150
+101 DIALOG 0, 0, 95, 200
 CAPTION "ファイルを開く"
 STYLE DS_CONTROL | DS_MODALFRAME | WS_CHILD | WS_CAPTION
 FONT 12, "ＭＳ Ｐゴシック"
@@ -144,8 +144,13 @@ FONT 12, "ＭＳ Ｐゴシック"
     LTEXT "画像ファイルをこのソフトで開いて、「次へ」をクリックして下さい。\n\n※ ファイルはここにドロップしても開けます。", -1, 5, 20, 85, 60
     PUSHBUTTON "開く(&O)...", psh3, 5, 85, 85, 14
     LTEXT "", stc1, 5, 100, 85, 25, SS_PATHELLIPSIS | NOT WS_GROUP
-    PUSHBUTTON "戻る(&B)", psh1, 5, 130, 40, 14
-    DEFPUSHBUTTON "次へ(&N)", psh2, 50, 130, 40, 14, WS_DISABLED
+    LTEXT "回転(&R):", -1, 5, 132, 36, 10
+    EDITTEXT edt1, 50, 130, 40, 12, ES_NOHIDESEL | ES_AUTOHSCROLL | ES_RIGHT
+    CONTROL "", scr1, "msctls_updown32", UDS_NOTHOUSANDS | UDS_ARROWKEYS | UDS_AUTOBUDDY | UDS_ALIGNRIGHT | UDS_SETBUDDYINT, 63, 165, 12, 20
+    LTEXT "明るさ(&G):", -1, 5, 151, 41, 11
+    COMBOBOX cmb1, 50, 150, 40, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON "戻る(&B)", psh1, 5, 180, 40, 14
+    DEFPUSHBUTTON "次へ(&N)", psh2, 50, 180, 40, 14, WS_DISABLED
 }
 
 102 DIALOG 0, 0, 95, 150

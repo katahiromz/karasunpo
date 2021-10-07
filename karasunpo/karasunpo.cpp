@@ -27,7 +27,7 @@ static const INT    s_nMaxLoadString = 512;
 // the class name of the main window
 static const TCHAR  s_szCompanyName[] = TEXT(COMPANYNAME);
 
-// the class name of the main window
+// the name of the Software key
 static const TCHAR  s_szSoftware[] = TEXT("Software");
 
 // the class name of the main window
