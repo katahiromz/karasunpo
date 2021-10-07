@@ -156,35 +156,28 @@ HBITMAP ii_32bpp_brightness(HBITMAP hbm, float alpha, float beta)
     float value;
     while (cdw--)
     {
-        if (pb[3] == 0) // alpha was zero
-        {
-            pb += 4;
-        }
-        else
-        {
-            value = alpha * *pb + beta;
-            if (value >= 255)
-                value = 255;
-            else if (value < 0)
-                value = 0;
-            *pb++ = BYTE(value);
+        value = alpha * *pb + beta;
+        if (value >= 255)
+            value = 255;
+        else if (value < 0)
+            value = 0;
+        *pb++ = BYTE(value);
 
-            value = alpha * *pb + beta;
-            if (value >= 255)
-                value = 255;
-            else if (value < 0)
-                value = 0;
-            *pb++ = BYTE(value);
+        value = alpha * *pb + beta;
+        if (value >= 255)
+            value = 255;
+        else if (value < 0)
+            value = 0;
+        *pb++ = BYTE(value);
 
-            value = alpha * *pb + beta;
-            if (value >= 255)
-                value = 255;
-            else if (value < 0)
-                value = 0;
-            *pb++ = BYTE(value);
+        value = alpha * *pb + beta;
+        if (value >= 255)
+            value = 255;
+        else if (value < 0)
+            value = 0;
+        *pb++ = BYTE(value);
 
-            ++pb; // alpha
-        }
+        ++pb; // alpha
     }
 
     return hbm;
