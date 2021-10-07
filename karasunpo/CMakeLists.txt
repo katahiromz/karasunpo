@@ -1,4 +1,4 @@
-option(KARASUNPO_SHAREWARE "Make Karasunpo shareware" ON)
+option(KARASUNPO_SHAREWARE "Make Karasunpo shareware" OFF)
 
 # karasunpo.exe
 add_executable(karasunpo WIN32 karasunpo.cpp Shareware.cpp SHA-256.cpp karasunpo_res.rc)

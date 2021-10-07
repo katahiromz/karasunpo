@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////
-             Karasunpo Pro (Shareware)
+             Karasunpo Pro (Freeware)
         by Katayama Hirofumi MZ (karahiromz)
 /////////////////////////////////////////////////////
 
@@ -23,8 +23,8 @@ angle on the image.
     Alt+Right               Next page
     Alt+Left                Previous page
     Ctrl+G                  Go to the page
-    +                       Zoom in
-    -                       Zoom out
+    Ctrl+[+]                Zoom in
+    Ctrl+[-]                Zoom out
 
 [Mouse Operations]
     Left Dragging           Input the segment
@@ -41,11 +41,7 @@ angle on the image.
 /////////////////////////////////////////////////////
 // License Agreement
 
-Karasunpo Pro is a shareware of $10 USD.
-
-Please contact me via e-mail and pay $10 via PayPal.
-
-E-mail: katayama.hirofumi.mz@gmail.com
+Karasunpo Pro became a freeware (License: New BSD).
 
 /////////////////////////////////////////////////////
 // Contact
