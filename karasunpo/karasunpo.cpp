@@ -500,6 +500,8 @@ struct WinApp {
         return loadPdf(m_szFileName, nPageIndex);
     }
 
+    HBITMAP m_hbmOriginal = NULL;
+
     bool loadFile(LPCTSTR pszFileName) {
         HBITMAP hbm;
         LPCTSTR pszDotExt = ii_find_dotext(pszFileName);
@@ -568,8 +570,24 @@ struct WinApp {
         ::PostMessage(m_hWnd, WM_SIZE, 0, 0);
     }
 
+    void setRotation(double eDegree)
+    {
+        // TODO:
+    }
+
+    void setBrightness(INT nPercents)
+    {
+        // TODO:
+    }
+
     void onOpened() {
+        ::DeleteObject(m_hbmOriginal);
+        m_hbmOriginal = reinterpret_cast<HBITMAP>(::CopyImage(
+            m_hbmImage, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG));
+
         ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], psh2), TRUE);
+        ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], edt1), TRUE);
+        ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb1), TRUE);
         ::SetDlgItemText(m_hTaskDialogs[DLGINDEX_LOADIMAGE], stc1, m_szFileName);
 
         std::deque<std::wstring> recent_files;
@@ -2277,10 +2295,32 @@ TaskGetStartedProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 INT_PTR CALLBACK
 TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     static WinApp *pApp = NULL;
+    CHAR szText[512];
     switch (uMsg) {
     case WM_INITDIALOG:
         pApp = reinterpret_cast<WinApp *>(lParam);
         pApp->m_hTaskDialogs[DLGINDEX_LOADIMAGE] = hWnd;
+        ::EnableWindow(GetDlgItem(hWnd, edt1), FALSE);
+        ::SetDlgItemTextA(hWnd, edt1, "0.0");
+        ::SendDlgItemMessage(hWnd, scr1, UDM_SETBASE, 10, 0);
+        ::SendDlgItemMessage(hWnd, scr1, UDM_SETPOS, 0, 0);
+        ::SendDlgItemMessage(hWnd, scr1, UDM_SETRANGE, 0, MAKELONG(UD_MAXVAL, UD_MINVAL));
+        ::EnableWindow(GetDlgItem(hWnd, cmb1), FALSE);
+        for (INT i = -100; i < 100; i += 10)
+        {
+            CHAR szText[8];
+            if (i == 0)
+            {
+                strcpy(szText, "0");
+                INT iItem = (INT)::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
+                ::SendDlgItemMessageA(hWnd, cmb1, CB_SETCURSEL, iItem, 0);
+            }
+            else
+            {
+                sprintf(szText, "%+d", i);
+                ::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
+            }
+        }
         return TRUE;
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
@@ -2297,8 +2337,68 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             break;
         case ID_DEACTIVATE:
             break;
+        case edt1:
+            switch (HIWORD(wParam))
+            {
+            case EN_CHANGE:
+                GetDlgItemTextA(hWnd, edt1, szText, _countof(szText));
+                pApp->setRotation(atof(szText));
+                break;
+            }
+            break;
+        case cmb1:
+            switch (HIWORD(wParam))
+            {
+            case CBN_EDITCHANGE:
+                GetDlgItemTextA(hWnd, cmb1, szText, _countof(szText));
+                pApp->setBrightness(atoi(szText));
+                break;
+            case CBN_SELENDOK:
+                {
+                    INT iItem = (INT)::SendDlgItemMessage(hWnd, cmb1, CB_GETCURSEL, 0, 0);
+                    ::SendDlgItemMessageA(hWnd, cmb1, CB_GETLBTEXT, iItem, (LPARAM)szText);
+                    pApp->setBrightness(atoi(szText));
+                }
+                break;
+            }
+            break;
         default:
             break;
+        }
+        break;
+    case WM_NOTIFY:
+        {
+            LPNMHDR pnmhdr = reinterpret_cast<LPNMHDR>(lParam);
+            NM_UPDOWN *pUpDown = reinterpret_cast<NM_UPDOWN *>(lParam);
+            double eValue;
+            switch (pnmhdr->code)
+            {
+            case EN_CHANGE:
+                break;
+            case UDN_DELTAPOS:
+                GetDlgItemTextA(hWnd, edt1, szText, _countof(szText));
+                eValue = atof(szText);
+                if (pUpDown->iDelta < 0)
+                {
+                    eValue -= 0.1;
+                }
+                else
+                {
+                    eValue += 0.1;
+                }
+                if (eValue > 180.0)
+                    eValue = 180.0;
+                if (eValue < -180.0)
+                    eValue = -180.0;
+                if (eValue == 0)
+                    sprintf(szText, "0.0");
+                else
+                    sprintf(szText, "%+.1f", eValue);
+                SetDlgItemTextA(hWnd, edt1, szText);
+                pUpDown->iDelta = pUpDown->iPos = eValue;
+                pApp->setRotation(eValue);
+                return FALSE;
+            }
         }
         break;
     default:
