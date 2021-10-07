@@ -642,7 +642,7 @@ struct WinApp {
         if (eContrast != 0.0 || eBrightness != 0.0)
         {
             float alpha = 1.0 + eContrast / 100.0;
-            float beta = eBrightness;
+            float beta = eBrightness * 255 / 100.0;
             hbmAdjusted = ii_32bpp_brightness(hbmRotated, alpha, beta);
             ii_destroy(hbmRotated);
         }
