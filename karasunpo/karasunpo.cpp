@@ -5,6 +5,17 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.hpp"
+#ifndef NO_SHAREWARE
+    #include "Shareware.hpp"
+    SW_Shareware g_shareware(
+        /* company registry key */      TEXT("Katayama Hirofumi MZ"),
+        /* application registry key */  TEXT("karasunpo"),
+        /* password hash */
+        "13369e9c89df8e20a425d5d2ef6ada8a5f3dd676dc8388e53c3118e3e5331621",
+        /* trial days */                4,
+        /* salt string */               "katahiromz_karasunpo",
+        /* version string */            "1.2");
+#endif
 
 #ifndef M_PI
     #define M_PI  3.14159265358979323846
@@ -16,7 +27,7 @@ static const INT    s_nMaxLoadString = 512;
 // the class name of the main window
 static const TCHAR  s_szCompanyName[] = TEXT(COMPANYNAME);
 
-// the class name of the main window
+// the name of the Software key
 static const TCHAR  s_szSoftware[] = TEXT("Software");
 
 // the class name of the main window
@@ -131,6 +142,46 @@ CenterMessageBox(HWND hwnd, LPCTSTR pszText, LPCTSTR pszCaption, UINT uType)
 
     return nID;
 } // CenterMessageBox
+
+HBITMAP ii_32bpp_brightness(HBITMAP hbm, float alpha, float beta)
+{
+    hbm = ii_32bpp(hbm);
+
+    BITMAP bm;
+    if (!ii_get_info(hbm, &bm))
+        return NULL;
+
+    LPBYTE pb = reinterpret_cast<LPBYTE>(bm.bmBits);
+    DWORD cdw = bm.bmWidth * bm.bmHeight;
+    float value;
+    while (cdw--)
+    {
+        value = alpha * *pb + beta;
+        if (value >= 255)
+            value = 255;
+        else if (value < 0)
+            value = 0;
+        *pb++ = BYTE(value);
+
+        value = alpha * *pb + beta;
+        if (value >= 255)
+            value = 255;
+        else if (value < 0)
+            value = 0;
+        *pb++ = BYTE(value);
+
+        value = alpha * *pb + beta;
+        if (value >= 255)
+            value = 255;
+        else if (value < 0)
+            value = 0;
+        *pb++ = BYTE(value);
+
+        ++pb; // alpha
+    }
+
+    return hbm;
+}
 
 // the application
 struct WinApp {
@@ -373,12 +424,74 @@ struct WinApp {
         return INT(msg.wParam);
     } // run
 
+    struct PASSWORD_DLG
+    {
+        LPSTR text;
+        INT cch;
+    };
+
+    static INT_PTR CALLBACK
+    PasswordDlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        static PASSWORD_DLG *s_data = NULL;
+        switch (uMsg)
+        {
+        case WM_INITDIALOG:
+            s_data = (PASSWORD_DLG *)lParam;
+            SetDlgItemTextA(hwnd, edt1, s_data->text);
+            CenterDialog(hwnd);
+            return TRUE;
+        case WM_COMMAND:
+            switch (LOWORD(wParam))
+            {
+            case IDOK:
+                GetDlgItemTextA(hwnd, edt1, s_data->text, s_data->cch);
+                EndDialog(hwnd, IDOK);
+                break;
+            case IDCANCEL:
+                EndDialog(hwnd, IDCANCEL);
+                break;
+            }
+        }
+        return FALSE;
+    }
+
+    BOOL PasswordBoxA(HWND hwnd, LPSTR text, INT cch)
+    {
+        PASSWORD_DLG data = { text, cch };
+        return DialogBoxParamW(m_hInst, MAKEINTRESOURCEW(IDD_PASSWORD),
+                               hwnd, PasswordDlgProc, (LPARAM)&data) == IDOK;
+    }
+
     HBITMAP loadPdf(LPCSTR pszFileName, INT nPageIndex = 0) {
         HBITMAP hbm = NULL;
-        FPDF_DOCUMENT pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, NULL);
-        if (pdf_doc != NULL) {
+        FPDF_DOCUMENT pdf_doc;
+        CHAR password[128] = "";
+        DWORD error;
+
+        pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, NULL);
+        error = m_pdfium.FPDF_GetLastError();
+        while (!pdf_doc && error == FPDF_ERR_PASSWORD)
+        {
+            if (PasswordBoxA(m_hWnd, password, _countof(password)))
+            {
+                pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, password);
+                error = m_pdfium.FPDF_GetLastError();
+                ZeroMemory(password, sizeof(password));
+                if (!pdf_doc && error == FPDF_ERR_PASSWORD)
+                {
+                    CenterMessageBox(m_hWnd, loadString(17), NULL, MB_ICONERROR);
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (pdf_doc) {
             FPDF_PAGE pdf_page = m_pdfium.FPDF_LoadPage(pdf_doc, nPageIndex);
-            if (pdf_page != NULL) {
+            if (pdf_page) {
                 double page_width = m_pdfium.FPDF_GetPageWidth(pdf_page);
                 double page_height = m_pdfium.FPDF_GetPageHeight(pdf_page);
                 HDC hDC = ::GetDC(m_hWnd);
@@ -426,6 +539,8 @@ struct WinApp {
     HBITMAP loadPdf(INT nPageIndex = 0) {
         return loadPdf(m_szFileName, nPageIndex);
     }
+
+    HBITMAP m_hbmOriginal = NULL;
 
     bool loadFile(LPCTSTR pszFileName) {
         HBITMAP hbm;
@@ -495,9 +610,87 @@ struct WinApp {
         ::PostMessage(m_hWnd, WM_SIZE, 0, 0);
     }
 
+    float m_eRotation = 0;
+    float m_eContrast = 0;
+    float m_eBrightness = 0;
+
+    void setAdjustment(float eRotation, float eContrast, float eBrightness)
+    {
+        float eRadian = eRotation * M_PI / 180.0;
+        HBITMAP hbmRotated = NULL, hbmAdjusted = NULL;
+
+        if (eRadian == 0)
+        {
+            hbmRotated = ii_32bpp(m_hbmOriginal);
+        }
+        else
+        {
+            if (HBITMAP hbm32bpp = ii_32bpp(m_hbmOriginal))
+            {
+                hbmRotated = ii_rotated_32bpp(hbm32bpp, eRadian, true);
+                ii_destroy(hbm32bpp);
+            }
+        }
+
+        if (eContrast != 0.0 || eBrightness != 0.0)
+        {
+            float alpha = 1.0 + eContrast / 100.0;
+            float beta = eBrightness * 255 / 100.0;
+            hbmAdjusted = ii_32bpp_brightness(hbmRotated, alpha, beta);
+            ii_destroy(hbmRotated);
+        }
+        else
+        {
+            hbmAdjusted = hbmRotated;
+            hbmRotated = NULL;
+        }
+
+        if (hbmAdjusted)
+        {
+            ii_destroy(m_hbmImage);
+            m_hbmImage = hbmAdjusted;
+
+            updateScrollInfo(true);
+            updateClientImage();
+            m_fit_mode = FIT_WHOLE;
+            fitWhile();
+        }
+
+        m_eRotation = eRotation;
+        m_eContrast = eContrast;
+        m_eBrightness = eBrightness;
+    }
+
+    void setRotation(float eRotation = 0.0)
+    {
+        setAdjustment(eRotation, m_eContrast, m_eBrightness);
+    }
+
+    void setBrightness(float eBrightness = 0.0)
+    {
+        setAdjustment(m_eRotation, m_eContrast, eBrightness);
+    }
+
+    void setContrast(float eContrast = 0.0)
+    {
+        setAdjustment(m_eRotation, eContrast, m_eBrightness);
+    }
+
     void onOpened() {
+        ::DeleteObject(m_hbmOriginal);
+        m_hbmOriginal = ii_clone(m_hbmImage);
+
         ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], psh2), TRUE);
+        ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], edt1), TRUE);
+        ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb1), TRUE);
+        ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb2), TRUE);
         ::SetDlgItemText(m_hTaskDialogs[DLGINDEX_LOADIMAGE], stc1, m_szFileName);
+
+        ::SetDlgItemTextA(m_hTaskDialogs[DLGINDEX_LOADIMAGE], edt1, "0.0");
+        ::SetDlgItemTextA(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb1, "0");
+        ::SetDlgItemTextA(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb2, "0");
+        setAdjustment(0, 0, 0);
+        m_eRotation = m_eContrast = m_eBrightness = 0;
 
         std::deque<std::wstring> recent_files;
         size_t count = m_recent_files.size();
@@ -2204,10 +2397,36 @@ TaskGetStartedProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 INT_PTR CALLBACK
 TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     static WinApp *pApp = NULL;
+    CHAR szText[512];
+    INT iItem;
     switch (uMsg) {
     case WM_INITDIALOG:
         pApp = reinterpret_cast<WinApp *>(lParam);
         pApp->m_hTaskDialogs[DLGINDEX_LOADIMAGE] = hWnd;
+        ::EnableWindow(GetDlgItem(hWnd, edt1), FALSE);
+        ::SetDlgItemTextA(hWnd, edt1, "0.0");
+        ::SendDlgItemMessage(hWnd, scr1, UDM_SETBASE, 10, 0);
+        ::SendDlgItemMessage(hWnd, scr1, UDM_SETPOS, 0, 0);
+        ::SendDlgItemMessage(hWnd, scr1, UDM_SETRANGE, 0, MAKELONG(UD_MAXVAL, UD_MINVAL));
+        ::EnableWindow(GetDlgItem(hWnd, cmb1), FALSE);
+        ::EnableWindow(GetDlgItem(hWnd, cmb2), FALSE);
+        for (INT i = 100; i >= -100; i -= 10)
+        {
+            if (i == 0)
+            {
+                strcpy(szText, "0");
+                iItem = (INT)::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
+                ::SendDlgItemMessageA(hWnd, cmb1, CB_SETCURSEL, iItem, 0);
+                iItem = (INT)::SendDlgItemMessageA(hWnd, cmb2, CB_ADDSTRING, 0, (LPARAM)szText);
+                ::SendDlgItemMessageA(hWnd, cmb2, CB_SETCURSEL, iItem, 0);
+            }
+            else
+            {
+                sprintf(szText, "%+d", i);
+                ::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
+                ::SendDlgItemMessageA(hWnd, cmb2, CB_ADDSTRING, 0, (LPARAM)szText);
+            }
+        }
         return TRUE;
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
@@ -2224,8 +2443,82 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             break;
         case ID_DEACTIVATE:
             break;
+        case edt1:
+            switch (HIWORD(wParam))
+            {
+            case EN_CHANGE:
+                GetDlgItemTextA(hWnd, edt1, szText, _countof(szText));
+                pApp->setRotation(atof(szText));
+                break;
+            }
+            break;
+        case cmb1:
+            switch (HIWORD(wParam))
+            {
+            case CBN_EDITCHANGE:
+                GetDlgItemTextA(hWnd, cmb1, szText, _countof(szText));
+                pApp->setBrightness(atoi(szText));
+                break;
+            case CBN_SELENDOK:
+                {
+                    INT iItem = (INT)::SendDlgItemMessage(hWnd, cmb1, CB_GETCURSEL, 0, 0);
+                    ::SendDlgItemMessageA(hWnd, cmb1, CB_GETLBTEXT, iItem, (LPARAM)szText);
+                    pApp->setBrightness(atoi(szText));
+                }
+                break;
+            }
+            break;
+        case cmb2:
+            switch (HIWORD(wParam))
+            {
+            case CBN_EDITCHANGE:
+                GetDlgItemTextA(hWnd, cmb2, szText, _countof(szText));
+                pApp->setContrast(atoi(szText));
+                break;
+            case CBN_SELENDOK:
+                {
+                    INT iItem = (INT)::SendDlgItemMessage(hWnd, cmb2, CB_GETCURSEL, 0, 0);
+                    ::SendDlgItemMessageA(hWnd, cmb2, CB_GETLBTEXT, iItem, (LPARAM)szText);
+                    pApp->setContrast(atoi(szText));
+                }
+                break;
+            }
+            break;
         default:
             break;
+        }
+        break;
+    case WM_NOTIFY:
+        {
+            LPNMHDR pnmhdr = reinterpret_cast<LPNMHDR>(lParam);
+            NM_UPDOWN *pUpDown = reinterpret_cast<NM_UPDOWN *>(lParam);
+            double eValue;
+            switch (pnmhdr->code)
+            {
+            case UDN_DELTAPOS:
+                GetDlgItemTextA(hWnd, edt1, szText, _countof(szText));
+                eValue = atof(szText);
+                if (pUpDown->iDelta < 0)
+                {
+                    eValue -= 0.1;
+                }
+                else
+                {
+                    eValue += 0.1;
+                }
+                if (eValue > 180.0)
+                    eValue = 180.0;
+                if (eValue < -180.0)
+                    eValue = -180.0;
+                if (eValue == 0)
+                    sprintf(szText, "0.0");
+                else
+                    sprintf(szText, "%+.1f", eValue);
+                SetDlgItemTextA(hWnd, edt1, szText);
+                pUpDown->iDelta = pUpDown->iPos = eValue;
+                pApp->setRotation(eValue);
+                return FALSE;
+            }
         }
         break;
     default:
@@ -2717,9 +3010,20 @@ WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (!pApp->onCreate()) {
             return -1;
         }
+#ifndef NO_SHAREWARE
+        PostMessageW(hWnd, WM_COMMAND, 9999, 0);
+#endif
         break;
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
+#ifndef NO_SHAREWARE
+        case 9999:
+            if (!g_shareware.Start(hWnd))
+            {
+                DestroyWindow(hWnd);
+            }
+            break;
+#endif
         case IDM_EXIT:
             pApp->onExit();
             break;

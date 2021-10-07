@@ -27,8 +27,8 @@ LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
         MENUITEM "横幅に合わせる(&H)", IDM_FIT_HORIZONTAL
         MENUITEM "縦幅に合わせる(&V)", IDM_FIT_VERTICAL
         MENUITEM SEPARATOR
-        MENUITEM "ズームイン(&I)\t＋", IDM_ZOOM_IN
-        MENUITEM "ズームアウト(&O)\t－", IDM_ZOOM_OUT
+        MENUITEM "ズームイン(&I)\tCtrl+[+]", IDM_ZOOM_IN
+        MENUITEM "ズームアウト(&O)\tCtrl+[-]", IDM_ZOOM_OUT
         MENUITEM SEPARATOR
         MENUITEM "ズーム倍率(&R)...", IDM_ZOOM_RATE
         MENUITEM SEPARATOR
@@ -97,7 +97,7 @@ STYLE DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION
 FONT 9, "ＭＳ Ｐゴシック"
 {
     ICON 1, -1, 14, 14, 0, 0
-    LTEXT "画像カラスンポ ver.1.0", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
+    LTEXT "画像カラスンポ ver.1.2", -1, 40, 14, 165, 8, SS_NOPREFIX | NOT WS_GROUP
     LTEXT "Copyright (C) 2015-2021 片山博文MZ", -1, 40, 26, 165, 8
     DEFPUSHBUTTON "OK", IDC_PAN, 90, 40, 50, 14, WS_GROUP
 }
@@ -135,7 +135,7 @@ FONT 12, "ＭＳ Ｐゴシック"
     DEFPUSHBUTTON "次へ(&N)", psh2, 50, 130, 40, 14
 }
 
-101 DIALOG 0, 0, 95, 150
+101 DIALOG 0, 0, 95, 210
 CAPTION "ファイルを開く"
 STYLE DS_CONTROL | DS_MODALFRAME | WS_CHILD | WS_CAPTION
 FONT 12, "ＭＳ Ｐゴシック"
@@ -144,8 +144,16 @@ FONT 12, "ＭＳ Ｐゴシック"
     LTEXT "画像ファイルをこのソフトで開いて、「次へ」をクリックして下さい。\n\n※ ファイルはここにドロップしても開けます。", -1, 5, 20, 85, 60
     PUSHBUTTON "開く(&O)...", psh3, 5, 85, 85, 14
     LTEXT "", stc1, 5, 100, 85, 25, SS_PATHELLIPSIS | NOT WS_GROUP
-    PUSHBUTTON "戻る(&B)", psh1, 5, 130, 40, 14
-    DEFPUSHBUTTON "次へ(&N)", psh2, 50, 130, 40, 14, WS_DISABLED
+    LTEXT "回転(&R):", -1, 5, 132, 36, 10
+    EDITTEXT edt1, 45, 130, 30, 12, ES_AUTOHSCROLL | ES_RIGHT
+    CONTROL "", scr1, "msctls_updown32", UDS_NOTHOUSANDS | UDS_ARROWKEYS | UDS_AUTOBUDDY | UDS_ALIGNRIGHT, 63, 165, 12, 20
+    LTEXT "度", -1, 80, 132, 12, 10
+    LTEXT "明るさ(&G):", -1, 5, 151, 41, 11
+    COMBOBOX cmb1, 50, 150, 40, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    LTEXT "ｺﾝﾄﾗｽﾄ(&C):", -1, 5, 171, 41, 11
+    COMBOBOX cmb2, 50, 170, 40, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON "戻る(&B)", psh1, 5, 190, 40, 14
+    DEFPUSHBUTTON "次へ(&N)", psh2, 50, 190, 40, 14, WS_DISABLED
 }
 
 102 DIALOG 0, 0, 95, 150
@@ -204,12 +212,24 @@ FONT 12, "ＭＳ Ｐゴシック"
     PUSHBUTTON "終了(&X)", psh2, 50, 130, 40, 14
 }
 
+IDD_PASSWORD DIALOG 0, 0, 165, 70
+CAPTION "画像カラスンポ"
+STYLE DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION
+FONT 9, "MS UI Gothic"
+{
+    LTEXT "PDF文書のパスワードを入力して下さい。", -1, 5, 5, 155, 16
+    LTEXT "パスワード(&P):", -1, 5, 30, 50, 14
+    EDITTEXT edt1, 60, 30, 100, 14, ES_AUTOHSCROLL | ES_PASSWORD
+    DEFPUSHBUTTON "OK", IDC_PAN, 35, 50, 60, 14
+    PUSHBUTTON "キャンセル", IDC_CROSS2, 100, 50, 60, 14
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // RT_VERSION
 
 1 VERSIONINFO
-FILEVERSION     1, 0, 0, 0
-PRODUCTVERSION  1, 0, 0, 0
+FILEVERSION     1, 2, 0, 0
+PRODUCTVERSION  1, 2, 0, 0
 FILEOS          0x40004
 FILETYPE        0x1
 {
@@ -219,10 +239,10 @@ FILETYPE        0x1
         {
             VALUE "CompanyName", "片山博文MZ\0"
             VALUE "FileDescription", "画像カラスンポ\0"
-            VALUE "FileVersion", "1.0\0"
+            VALUE "FileVersion", "1.2\0"
             VALUE "LegalCopyright", "Copyright (C) 2015-2021 片山博文MZ\0"
             VALUE "ProductName", "画像カラスンポ\0"
-            VALUE "ProductVersion", "1.0\0"
+            VALUE "ProductVersion", "1.2\0"
         }
     }
     BLOCK "VarFileInfo"
@@ -236,7 +256,7 @@ FILETYPE        0x1
 
 STRINGTABLE
 {
-    1, "画像カラスンポ ver.1.0 by 片山博文MZ"
+    1, "画像カラスンポ ver.1.2 by 片山博文MZ"
     2, "画像カラスンポ"
     3, "PDFまたは画像ファイルを開く"
     4, "PDF文書か画像ファイル|*.pdf;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|PDF文書 (*.pdf)|*.pdf|画像ファイル (*.jpg;*.png;*.gif;*.tif;*.bmp)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|JPEG画像 (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG画像 (*.png)|*.png|GIF画像 (*.gif)|*.gif|TIFF画像 (*.tif;*.tiff)|*.tif;*.tiff|ビットマップ画像 (*.bmp;*.dib)|*.bmp;*.dib|すべてのファイル (*.*)|*.*|"
@@ -252,6 +272,7 @@ STRINGTABLE
     14, "rad"
     15, "PDF入力モジュールが読み込めませんでした。"
     16, "(なし)"
+    17, "パスワードが違います。文書を開けません。"
 }
 
 //////////////////////////////////////////////////////////////////////////////

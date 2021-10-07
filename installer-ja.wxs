@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="14D911F7-0200-4AE9-AC47-DA8C4CFE6A33" Name="画像カラスンポ" Language="1041" Version="1.0" Manufacturer="片山博文MZ" UpgradeCode="FF0559F0-58D7-470A-BB46-F5A79ACD934E" Codepage="932">
-        <Package Description="画像カラスンポ" Comments="名目上の寸法または角度を計測" InstallerVersion="200" Compressed="yes" SummaryCodepage="932" />
+    <Product Id="EA918EB8-995C-4706-B8EE-66578B61413A" Name="画像カラスンポPro" Language="1041" Version="1.2" Manufacturer="片山博文MZ" UpgradeCode="5614CFB3-4F61-4398-B6E1-3911AA34C07F" Codepage="932">
+        <Package Description="画像カラスンポPro" Comments="名目上の寸法または角度を計測" InstallerVersion="200" Compressed="yes" SummaryCodepage="932" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" CompressionLevel="high" />
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="DesktopFolder" />
             <Directory Id="ProgramFilesFolder" Name="PFiles">
-                <Directory Id="APPLICATIONROOTDIRECTORY" Name="Karasunpo">
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="KarasunpoPro">
                     <Component Id="karasunpo.exe" Guid="007EE244-D9A1-4B98-ADEA-53042E92B70F">
                         <File Id="KARASUNPO.EXE" Name="karasunpo.exe" Source="karasunpo\karasunpo.exe" KeyPath="yes">
                             <Shortcut Id="KarasunpoDesktopShortcut" Directory="DesktopFolder" Name="画像カラスンポ" Description="画像カラスンポを起動する" Advertise="yes" Icon="karasunpo.exe" IconIndex="0" />
@@ -17,6 +17,9 @@
                     </Component>
                     <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
                         <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
+                    </Component>
+                    <Component Id="karasunpo_manual_ja.pdf" Guid="7EBCD1AC-5609-4867-9E55-3A35BA953C48">
+                        <File Id="karasunpo_manual_ja.pdf" Name="karasunpo_manual_ja.pdf" Source="karasunpo_manual_ja.pdf" />
                     </Component>
                     <Directory Id="X86" Name="x86">
                         <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
@@ -35,8 +38,9 @@
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\Katayama Hirofumi MZ\karasunpo" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
                 <Shortcut Id="UninstallProduct" Name="画像カラスンポのアンインストール" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="画像カラスンポをアンインストールする" />
-                <Shortcut Id="READMEJP.TXT" Name="READMEJP.txt" Target="[APPLICATIONROOTDIRECTORY]READMEJP.txt" Description="はじめにお読み下さい" />
+                <Shortcut Id="READMEJP.TXT" Name="はじめにお読み下さい" Target="[APPLICATIONROOTDIRECTORY]READMEJP.txt" Description="はじめにお読み下さい" />
                 <Shortcut Id="LICENSE.TXT" Name="LICENSE.txt" Target="[APPLICATIONROOTDIRECTORY]LICENSE.txt" Description="使用許諾契約書" />
+                <Shortcut Id="karasunpo_manual_ja.pdf" Name="マニュアル(PDF)" Description="マニュアル(PDF)" Target="[APPLICATIONROOTDIRECTORY]karasunpo_manual_ja.pdf" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
@@ -52,6 +56,7 @@
             <ComponentRef Id="PDFIUM.DLL" />
             <ComponentRef Id="ApplicationShortcut" />
             <ComponentRef Id="ApplicationShortcut2" />
+            <ComponentRef Id="karasunpo_manual_ja.pdf" />
         </Feature>
         <UI />
         <UIRef Id="WixUI_InstallDir" />
