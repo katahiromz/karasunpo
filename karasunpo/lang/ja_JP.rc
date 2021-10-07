@@ -27,8 +27,8 @@ LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
         MENUITEM "横幅に合わせる(&H)", IDM_FIT_HORIZONTAL
         MENUITEM "縦幅に合わせる(&V)", IDM_FIT_VERTICAL
         MENUITEM SEPARATOR
-        MENUITEM "ズームイン(&I)", IDM_ZOOM_IN
-        MENUITEM "ズームアウト(&O)", IDM_ZOOM_OUT
+        MENUITEM "ズームイン(&I)\tCtrl+[+]", IDM_ZOOM_IN
+        MENUITEM "ズームアウト(&O)\tCtrl+[-]", IDM_ZOOM_OUT
         MENUITEM SEPARATOR
         MENUITEM "ズーム倍率(&R)...", IDM_ZOOM_RATE
         MENUITEM SEPARATOR

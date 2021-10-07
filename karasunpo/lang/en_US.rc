@@ -27,8 +27,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
         MENUITEM "Fit &horizontally", IDM_FIT_HORIZONTAL
         MENUITEM "Fit &vertically", IDM_FIT_VERTICAL
         MENUITEM SEPARATOR
-        MENUITEM "Zoom &in\t+", IDM_ZOOM_IN
-        MENUITEM "Zoom &out\t-", IDM_ZOOM_OUT
+        MENUITEM "Zoom &in\tCtrl+[+]", IDM_ZOOM_IN
+        MENUITEM "Zoom &out\tCtrl+[-]", IDM_ZOOM_OUT
         MENUITEM SEPARATOR
         MENUITEM "Zoom &rate...", IDM_ZOOM_RATE
         MENUITEM SEPARATOR
