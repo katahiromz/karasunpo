@@ -71,8 +71,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
         MENUITEM "Fit &horizontally", IDM_FIT_HORIZONTAL
         MENUITEM "Fit &vertically", IDM_FIT_VERTICAL
         MENUITEM SEPARATOR
-        MENUITEM "Zoom &in\t+", IDM_ZOOM_IN
-        MENUITEM "Zoom &out\t-", IDM_ZOOM_OUT
+        MENUITEM "Zoom &in", IDM_ZOOM_IN
+        MENUITEM "Zoom &out", IDM_ZOOM_OUT
         MENUITEM SEPARATOR
         MENUITEM "Zoom &rate...", IDM_ZOOM_RATE
         MENUITEM SEPARATOR
@@ -135,7 +135,7 @@ FONT 11, "MS Shell Dlg"
     DEFPUSHBUTTON "&Next", psh2, 50, 130, 40, 14
 }
 
-101 DIALOG 0, 0, 95, 200
+101 DIALOG 0, 0, 95, 210
 CAPTION "Open A File"
 STYLE DS_CONTROL | DS_MODALFRAME | WS_CHILD | WS_CAPTION
 FONT 11, "MS Shell Dlg"
@@ -150,8 +150,10 @@ FONT 11, "MS Shell Dlg"
     LTEXT "deg", -1, 76, 132, 17, 10
     LTEXT "Bri&ghtness:", -1, 5, 151, 41, 11
     COMBOBOX cmb1, 50, 150, 40, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON "&Back", psh1, 5, 180, 40, 14
-    DEFPUSHBUTTON "&Next", psh2, 50, 180, 40, 14, WS_DISABLED
+    LTEXT "&Contrast:", -1, 5, 171, 41, 11
+    COMBOBOX cmb2, 50, 170, 40, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON "&Back", psh1, 5, 190, 40, 14
+    DEFPUSHBUTTON "&Next", psh2, 50, 190, 40, 14, WS_DISABLED
 }
 
 102 DIALOG 0, 0, 95, 150
@@ -221,46 +223,6 @@ FONT 9, "MS Shell Dlg"
     DEFPUSHBUTTON "OK", IDC_PAN, 35, 50, 60, 14
     PUSHBUTTON "Cancel", IDC_CROSS2, 100, 50, 60, 14
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// RT_ACCELERATOR
-
-1 ACCELERATORS
-{
-    "?", IDM_ABOUT, ALT, ASCII
-    "/", IDM_ABOUT, ALT, ASCII
-    "O", IDM_OPEN, CONTROL, VIRTKEY
-    VK_F4, IDM_EXIT, CONTROL, VIRTKEY
-    VK_RIGHT, IDM_NEXT_PAGE, ALT, VIRTKEY
-    VK_LEFT, IDM_PREV_PAGE, ALT, VIRTKEY
-    "G", IDM_GO_TO_PAGE, CONTROL, VIRTKEY
-    VK_NEXT, IDM_PAGEDOWN, VIRTKEY
-    VK_PRIOR, IDM_PAGEUP, VIRTKEY
-    VK_HOME, IDM_GO_TO_HOME, CONTROL, VIRTKEY
-    VK_END, IDM_GO_TO_END, CONTROL, VIRTKEY
-    VK_OEM_PLUS, IDM_ZOOM_IN, VIRTKEY
-    VK_OEM_MINUS, IDM_ZOOM_OUT, VIRTKEY
-    VK_ADD, IDM_ZOOM_IN, VIRTKEY
-    VK_SUBTRACT, IDM_ZOOM_OUT, VIRTKEY
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// RT_GROUP_CURSOR
-
-IDC_PAN CURSOR "res/1033_Cursor_1.cur"
-
-IDC_CROSS2 CURSOR "res/1033_Cursor_2.cur"
-
-IDC_LEFTRIGHT CURSOR "res/1033_Cursor_3.cur"
-
-IDC_UPDOWN CURSOR "res/1033_Cursor_4.cur"
-
-IDC_MOVE CURSOR "res/1033_Cursor_5.cur"
-
-//////////////////////////////////////////////////////////////////////////////
-// RT_GROUP_ICON
-
-1 ICON "res/1033_Icon_1.ico"
 
 //////////////////////////////////////////////////////////////////////////////
 // RT_VERSION

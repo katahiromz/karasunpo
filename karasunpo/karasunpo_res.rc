@@ -12,6 +12,42 @@
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 
 //////////////////////////////////////////////////////////////////////////////
+// RT_ACCELERATOR
+
+1 ACCELERATORS
+{
+    "?", IDM_ABOUT, ALT, ASCII
+    "/", IDM_ABOUT, ALT, ASCII
+    "O", IDM_OPEN, CONTROL, VIRTKEY
+    VK_F4, IDM_EXIT, CONTROL, VIRTKEY
+    VK_RIGHT, IDM_NEXT_PAGE, ALT, VIRTKEY
+    VK_LEFT, IDM_PREV_PAGE, ALT, VIRTKEY
+    "G", IDM_GO_TO_PAGE, CONTROL, VIRTKEY
+    VK_NEXT, IDM_PAGEDOWN, VIRTKEY
+    VK_PRIOR, IDM_PAGEUP, VIRTKEY
+    VK_HOME, IDM_GO_TO_HOME, CONTROL, VIRTKEY
+    VK_END, IDM_GO_TO_END, CONTROL, VIRTKEY
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// RT_GROUP_CURSOR
+
+IDC_PAN CURSOR "res/Cursor_1.cur"
+
+IDC_CROSS2 CURSOR "res/Cursor_2.cur"
+
+IDC_LEFTRIGHT CURSOR "res/Cursor_3.cur"
+
+IDC_UPDOWN CURSOR "res/Cursor_4.cur"
+
+IDC_MOVE CURSOR "res/Cursor_5.cur"
+
+//////////////////////////////////////////////////////////////////////////////
+// RT_GROUP_ICON
+
+1 ICON "res/Icon_1.ico"
+
+//////////////////////////////////////////////////////////////////////////////
 // RT_MANIFEST
 
 1 24 "res/Manifest_1.manifest"

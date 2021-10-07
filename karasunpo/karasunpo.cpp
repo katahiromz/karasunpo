@@ -143,6 +143,53 @@ CenterMessageBox(HWND hwnd, LPCTSTR pszText, LPCTSTR pszCaption, UINT uType)
     return nID;
 } // CenterMessageBox
 
+HBITMAP ii_32bpp_brightness(HBITMAP hbm, float alpha, float beta)
+{
+    hbm = ii_32bpp(hbm);
+
+    BITMAP bm;
+    if (!ii_get_info(hbm, &bm))
+        return NULL;
+
+    LPBYTE pb = reinterpret_cast<LPBYTE>(bm.bmBits);
+    DWORD cdw = bm.bmWidth * bm.bmHeight;
+    float value;
+    while (cdw--)
+    {
+        if (pb[3] == 0) // alpha was zero
+        {
+            pb += 4;
+        }
+        else
+        {
+            value = alpha * *pb + beta;
+            if (value >= 255)
+                value = 255;
+            else if (value < 0)
+                value = 0;
+            *pb++ = BYTE(value);
+
+            value = alpha * *pb + beta;
+            if (value >= 255)
+                value = 255;
+            else if (value < 0)
+                value = 0;
+            *pb++ = BYTE(value);
+
+            value = alpha * *pb + beta;
+            if (value >= 255)
+                value = 255;
+            else if (value < 0)
+                value = 0;
+            *pb++ = BYTE(value);
+
+            ++pb; // alpha
+        }
+    }
+
+    return hbm;
+}
+
 // the application
 struct WinApp {
     INT         m_argc;         // number of command line parameters
@@ -570,25 +617,87 @@ struct WinApp {
         ::PostMessage(m_hWnd, WM_SIZE, 0, 0);
     }
 
-    void setRotation(double eDegree)
+    float m_eRotation = 0;
+    float m_eContrast = 0;
+    float m_eBrightness = 0;
+
+    void setAdjustment(float eRotation, float eContrast, float eBrightness)
     {
-        // TODO:
+        float eRadian = eRotation * M_PI / 180.0;
+        HBITMAP hbmRotated = NULL, hbmAdjusted = NULL;
+
+        if (eRadian == 0)
+        {
+            hbmRotated = ii_32bpp(m_hbmOriginal);
+        }
+        else
+        {
+            if (HBITMAP hbm32bpp = ii_32bpp(m_hbmOriginal))
+            {
+                hbmRotated = ii_rotated_32bpp(hbm32bpp, eRadian, true);
+                ii_destroy(hbm32bpp);
+            }
+        }
+
+        if (eContrast != 0.0 || eBrightness != 0.0)
+        {
+            float alpha = 1.0 + eContrast / 100.0;
+            float beta = eBrightness;
+            hbmAdjusted = ii_32bpp_brightness(hbmRotated, alpha, beta);
+            ii_destroy(hbmRotated);
+        }
+        else
+        {
+            hbmAdjusted = hbmRotated;
+            hbmRotated = NULL;
+        }
+
+        if (hbmAdjusted)
+        {
+            ii_destroy(m_hbmImage);
+            m_hbmImage = hbmAdjusted;
+
+            updateScrollInfo(true);
+            updateClientImage();
+            m_fit_mode = FIT_WHOLE;
+            fitWhile();
+        }
+
+        m_eRotation = eRotation;
+        m_eContrast = eContrast;
+        m_eBrightness = eBrightness;
     }
 
-    void setBrightness(INT nPercents)
+    void setRotation(float eRotation = 0.0)
     {
-        // TODO:
+        setAdjustment(eRotation, m_eContrast, m_eBrightness);
+    }
+
+    void setBrightness(float eBrightness = 0.0)
+    {
+        setAdjustment(m_eRotation, m_eContrast, eBrightness);
+    }
+
+    void setContrast(float eContrast = 0.0)
+    {
+        setAdjustment(m_eRotation, eContrast, m_eBrightness);
     }
 
     void onOpened() {
         ::DeleteObject(m_hbmOriginal);
-        m_hbmOriginal = reinterpret_cast<HBITMAP>(::CopyImage(
-            m_hbmImage, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG));
+        m_hbmOriginal = ii_clone(m_hbmImage);
 
         ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], psh2), TRUE);
         ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], edt1), TRUE);
         ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb1), TRUE);
+        ::EnableWindow(::GetDlgItem(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb2), TRUE);
         ::SetDlgItemText(m_hTaskDialogs[DLGINDEX_LOADIMAGE], stc1, m_szFileName);
+
+        ::SetDlgItemTextA(m_hTaskDialogs[DLGINDEX_LOADIMAGE], edt1, "0.0");
+        ::SetDlgItemTextA(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb1, "0");
+        ::SetDlgItemTextA(m_hTaskDialogs[DLGINDEX_LOADIMAGE], cmb2, "0");
+        setAdjustment(0, 0, 0);
+        m_eRotation = m_eContrast = m_eBrightness = 0;
 
         std::deque<std::wstring> recent_files;
         size_t count = m_recent_files.size();
@@ -2296,6 +2405,7 @@ INT_PTR CALLBACK
 TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     static WinApp *pApp = NULL;
     CHAR szText[512];
+    INT iItem;
     switch (uMsg) {
     case WM_INITDIALOG:
         pApp = reinterpret_cast<WinApp *>(lParam);
@@ -2306,19 +2416,22 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         ::SendDlgItemMessage(hWnd, scr1, UDM_SETPOS, 0, 0);
         ::SendDlgItemMessage(hWnd, scr1, UDM_SETRANGE, 0, MAKELONG(UD_MAXVAL, UD_MINVAL));
         ::EnableWindow(GetDlgItem(hWnd, cmb1), FALSE);
-        for (INT i = -100; i < 100; i += 10)
+        ::EnableWindow(GetDlgItem(hWnd, cmb2), FALSE);
+        for (INT i = 100; i >= -100; i -= 10)
         {
-            CHAR szText[8];
             if (i == 0)
             {
                 strcpy(szText, "0");
-                INT iItem = (INT)::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
+                iItem = (INT)::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
                 ::SendDlgItemMessageA(hWnd, cmb1, CB_SETCURSEL, iItem, 0);
+                iItem = (INT)::SendDlgItemMessageA(hWnd, cmb2, CB_ADDSTRING, 0, (LPARAM)szText);
+                ::SendDlgItemMessageA(hWnd, cmb2, CB_SETCURSEL, iItem, 0);
             }
             else
             {
                 sprintf(szText, "%+d", i);
                 ::SendDlgItemMessageA(hWnd, cmb1, CB_ADDSTRING, 0, (LPARAM)szText);
+                ::SendDlgItemMessageA(hWnd, cmb2, CB_ADDSTRING, 0, (LPARAM)szText);
             }
         }
         return TRUE;
@@ -2362,6 +2475,22 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 break;
             }
             break;
+        case cmb2:
+            switch (HIWORD(wParam))
+            {
+            case CBN_EDITCHANGE:
+                GetDlgItemTextA(hWnd, cmb2, szText, _countof(szText));
+                pApp->setContrast(atoi(szText));
+                break;
+            case CBN_SELENDOK:
+                {
+                    INT iItem = (INT)::SendDlgItemMessage(hWnd, cmb2, CB_GETCURSEL, 0, 0);
+                    ::SendDlgItemMessageA(hWnd, cmb2, CB_GETLBTEXT, iItem, (LPARAM)szText);
+                    pApp->setContrast(atoi(szText));
+                }
+                break;
+            }
+            break;
         default:
             break;
         }
@@ -2373,8 +2502,6 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             double eValue;
             switch (pnmhdr->code)
             {
-            case EN_CHANGE:
-                break;
             case UDN_DELTAPOS:
                 GetDlgItemTextA(hWnd, edt1, szText, _countof(szText));
                 eValue = atof(szText);
