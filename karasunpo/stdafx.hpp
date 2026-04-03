@@ -57,7 +57,8 @@
 
 #include "imaio.h"
 #include "mstr.hpp"
-#include "katahiromz_pdfium.h"
+#include "../pdf2img/pdf2bitmap.h"
+#include "../pdf2img/gdipm.h"
 
 #ifdef _MSC_VER
     // for detecting memory leak (MSVC only)

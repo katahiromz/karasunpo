@@ -1,0 +1,3 @@
+[submodule "pdf2img"]
+	path = pdf2img
+	url = https://github.com/katahiromz/pdf2img

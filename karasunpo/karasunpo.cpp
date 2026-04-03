@@ -204,7 +204,7 @@ struct WinApp {
     // initial size of dialog window
     SIZE        m_sizTaskDlg;
     // file path
-    TCHAR       m_szFileName[MAX_PATH];
+    WCHAR       m_szFileName[MAX_PATH];
     // bitmap image
     HBITMAP     m_hbmImage;
     // client image
@@ -259,7 +259,7 @@ struct WinApp {
     }           m_measure_type;
     bool        m_in_radian;
     bool        m_two_button_moved;
-    katahiromz_pdfium m_pdfium;
+    PDF2BITMAP_DATA  m_pdfium;
     bool        m_is_pdf;
     INT         m_nPageIndex;
     INT         m_nPageCount;
@@ -355,19 +355,7 @@ struct WinApp {
 
     // start up
     bool startup(INT nCmdShow) {
-        if (!m_pdfium.load(TEXT("pdfium.dll")) &&
-#ifdef _WIN64
-            !m_pdfium.load(TEXT("x64\\pdfium.dll")) &&
-            !m_pdfium.load(TEXT("katahiromz_pdfium\\x64\\pdfium.dll")) &&
-            !m_pdfium.load(TEXT("..\\katahiromz_pdfium\\x64\\pdfium.dll")) &&
-            !m_pdfium.load(TEXT("..\\..\\katahiromz_pdfium\\x64\\pdfium.dll"))
-#else
-            !m_pdfium.load(TEXT("x86\\pdfium.dll")) &&
-            !m_pdfium.load(TEXT("katahiromz_pdfium\\x86\\pdfium.dll")) &&
-            !m_pdfium.load(TEXT("..\\katahiromz_pdfium\\x86\\pdfium.dll")) &&
-            !m_pdfium.load(TEXT("..\\..\\katahiromz_pdfium\\x86\\pdfium.dll"))
-#endif
-        )
+        if (pdf2bitmap_init(&m_pdfium) != S_OK)
         {
             CenterMessageBox(NULL, loadString(15),
                 NULL, MB_ICONERROR);
@@ -463,22 +451,19 @@ struct WinApp {
                                hwnd, PasswordDlgProc, (LPARAM)&data) == IDOK;
     }
 
-    HBITMAP loadPdf(LPCSTR pszFileName, INT nPageIndex = 0) {
+    HBITMAP loadPdf(LPCWSTR pszFileName, INT nPageIndex = 0) {
         HBITMAP hbm = NULL;
         FPDF_DOCUMENT pdf_doc;
         CHAR password[128] = "";
         DWORD error;
 
-        pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, NULL);
-        error = m_pdfium.FPDF_GetLastError();
-        while (!pdf_doc && error == FPDF_ERR_PASSWORD)
+        HRESULT hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 0, NULL);
+        while (hr == E_ACCESSDENIED)
         {
             if (PasswordBoxA(m_hWnd, password, _countof(password)))
             {
-                pdf_doc = m_pdfium.FPDF_LoadDocument(pszFileName, password);
-                error = m_pdfium.FPDF_GetLastError();
-                ZeroMemory(password, sizeof(password));
-                if (!pdf_doc && error == FPDF_ERR_PASSWORD)
+                hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 0, password);
+                if (hr == E_ACCESSDENIED)
                 {
                     CenterMessageBox(m_hWnd, loadString(17), NULL, MB_ICONERROR);
                 }
@@ -489,51 +474,14 @@ struct WinApp {
             }
         }
 
-        if (pdf_doc) {
-            FPDF_PAGE pdf_page = m_pdfium.FPDF_LoadPage(pdf_doc, nPageIndex);
-            if (pdf_page) {
-                double page_width = m_pdfium.FPDF_GetPageWidth(pdf_page);
-                double page_height = m_pdfium.FPDF_GetPageHeight(pdf_page);
-                HDC hDC = ::GetDC(m_hWnd);
-                int logpixelsx = ::GetDeviceCaps(hDC, LOGPIXELSX);
-                int logpixelsy = ::GetDeviceCaps(hDC, LOGPIXELSY);
-                SIZE sizPixels;
-                //sizPixels.cx = LONG(page_width * logpixelsx / 72);
-                //sizPixels.cy = LONG(page_height * logpixelsy / 72);
-                sizPixels.cx = LONG(page_width * logpixelsx / 72 * 2);
-                sizPixels.cy = LONG(page_height * logpixelsy / 72 * 2);
-                HDC hMemDC = ::CreateCompatibleDC(hDC);
-                hbm = ::CreateCompatibleBitmap(hDC, sizPixels.cx, sizPixels.cy);
-                if (hbm != NULL) {
-                    HGDIOBJ hbmOld = ::SelectObject(hMemDC, hbm);
-                    RECT rc = {0, 0, sizPixels.cx, sizPixels.cy};
-                    ::FillRect(hMemDC, &rc,
-                        reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH)));
-                    m_pdfium.FPDF_RenderPage(hMemDC, pdf_page,
-                        0, 0, sizPixels.cx, sizPixels.cy, 0,
-                        FPDF_ANNOT | FPDF_PRINTING
-                    );
-                    ::SelectObject(hMemDC, hbmOld);
-                    // success
-                    m_nPageIndex = nPageIndex;
-                    m_nPageCount = m_pdfium.FPDF_GetPageCount(pdf_doc);
-                    m_is_pdf = true;
-                }
-                ::DeleteDC(hMemDC);
-                ::ReleaseDC(m_hWnd, hDC);
-                m_pdfium.FPDF_ClosePage(pdf_page);
-            }
-            m_pdfium.FPDF_CloseDocument(pdf_doc);
+        if (SUCCEEDED(hr)) {
+            // success
+            m_nPageIndex = nPageIndex;
+            m_nPageCount = m_pdfium.page_count;
+            m_is_pdf = true;
         }
-        return hbm;
-    }
 
-    HBITMAP loadPdf(LPCWSTR pszFileName, INT nPageIndex = 0) {
-        CHAR szFileName[MAX_PATH];
-        szFileName[0] = 0;
-        ::WideCharToMultiByte(CP_ACP, 0, pszFileName, -1,
-            szFileName, MAX_PATH, NULL, NULL);
-        return loadPdf(szFileName, nPageIndex);
+        return hbm;
     }
 
     HBITMAP loadPdf(INT nPageIndex = 0) {
@@ -549,21 +497,21 @@ struct WinApp {
         float dpi = 0;
         switch (type) {
         case II_IMAGE_TYPE_JPG:
-            hbm = ii_jpg_load(pszFileName, &dpi);
+            hbm = gdipm_load_pic(m_pdfium.gdipm, pszFileName, MakeARGB(0xFF, 0xFF, 0xFF, 0xFF));
             break;
         case II_IMAGE_TYPE_GIF:
         case II_IMAGE_TYPE_ANIGIF:
-            hbm = ii_gif_load_8bpp(pszFileName);
+            hbm = gdipm_load_pic(m_pdfium.gdipm, pszFileName, MakeARGB(0xFF, 0xFF, 0xFF, 0xFF));
             break;
         case II_IMAGE_TYPE_PNG:
         case II_IMAGE_TYPE_APNG:
-            hbm = ii_png_load(pszFileName, &dpi);
+            hbm = gdipm_load_pic(m_pdfium.gdipm, pszFileName, MakeARGB(0xFF, 0xFF, 0xFF, 0xFF));
             break;
         case II_IMAGE_TYPE_TIF:
-            hbm = ii_tif_load(pszFileName, &dpi);
+            hbm = gdipm_load_pic(m_pdfium.gdipm, pszFileName, MakeARGB(0xFF, 0xFF, 0xFF, 0xFF));
             break;
         case II_IMAGE_TYPE_BMP:
-            hbm = ii_bmp_load(pszFileName, &dpi);
+            hbm = gdipm_load_pic(m_pdfium.gdipm, pszFileName, MakeARGB(0xFF, 0xFF, 0xFF, 0xFF));
             break;
         default:
             if (lstrcmpi(pszDotExt, TEXT(".pdf")) == 0) {
