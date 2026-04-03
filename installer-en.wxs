@@ -18,11 +18,9 @@
                     <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
                         <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
                     </Component>
-                    <Directory Id="X86" Name="x86">
-                        <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
-                            <File Id="PDFIUM.DLL" Name="pdfium.dll" Source="katahiromz_pdfium\x86\pdfium.dll" />
-                        </Component>
-                    </Directory>
+                    <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
+                        <File Id="PDFIUM.DLL" Name="pdfium.dll" Source="katahiromz_pdfium\x86\pdfium.dll" />
+                    </Component>
                 </Directory>
             </Directory>
             <Directory Id="ProgramMenuFolder">

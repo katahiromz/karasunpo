@@ -21,11 +21,9 @@
                     <Component Id="karasunpo_manual_ja.pdf" Guid="7EBCD1AC-5609-4867-9E55-3A35BA953C48">
                         <File Id="karasunpo_manual_ja.pdf" Name="karasunpo_manual_ja.pdf" Source="karasunpo_manual_ja.pdf" />
                     </Component>
-                    <Directory Id="X86" Name="x86">
-                        <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
-                            <File Id="PDFIUM.DLL" Name="pdfium.dll" Source="katahiromz_pdfium\x86\pdfium.dll" />
-                        </Component>
-                    </Directory>
+                    <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
+                        <File Id="PDFIUM.DLL" Name="pdfium.dll" Source="katahiromz_pdfium\x86\pdfium.dll" />
+                    </Component>
                 </Directory>
             </Directory>
             <Directory Id="ProgramMenuFolder">
