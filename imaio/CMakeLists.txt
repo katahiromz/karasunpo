@@ -68,7 +68,7 @@ add_library(imaio-dll SHARED
 )
 set_target_properties(imaio-dll PROPERTIES OUTPUT_NAME "imaio")
 
-target_compile_definitions(imaio-dll PRIVATE -DIMAIO_DLL)
+#target_compile_definitions(imaio-dll PRIVATE -DIMAIO_DLL)
 
 target_include_directories(imaio-dll PRIVATE
     #${GIF_INCLUDE_DIR}

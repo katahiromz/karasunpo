@@ -18,7 +18,7 @@
 #endif
 
 #ifndef M_PI
-    #define M_PI  3.14159265358979323846
+    #define M_PI  3.1415926f
 #endif
 
 // maximum length of resource string plus one
@@ -264,6 +264,10 @@ struct WinApp {
     INT         m_nPageIndex;
     INT         m_nPageCount;
     SegColor    m_seg_color;
+    HBITMAP m_hbmOriginal;
+    float m_eRotation;
+    float m_eContrast;
+    float m_eBrightness;
 
     std::deque<std::wstring>    m_recent_files;
     HCURSOR     m_ahCursors[5];
@@ -307,6 +311,10 @@ struct WinApp {
         m_is_pdf = false;
         m_nPageIndex = 0;
         m_nPageCount = 0;
+		m_hbmOriginal = NULL;
+		m_eRotation = 0;
+		m_eContrast = 0;
+		m_eBrightness = 0;
         m_seg_color = SC_RED;
         for (int i = 0; i < 5; ++i) {
             m_ahCursors[i] = ::LoadCursor(hInst, MAKEINTRESOURCE(IDC_PAN + i));
@@ -453,16 +461,14 @@ struct WinApp {
 
     HBITMAP loadPdf(LPCWSTR pszFileName, INT nPageIndex = 0) {
         HBITMAP hbm = NULL;
-        FPDF_DOCUMENT pdf_doc;
         CHAR password[128] = "";
-        DWORD error;
 
-        HRESULT hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 0, NULL);
+        HRESULT hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 300.0f, NULL);
         while (hr == E_ACCESSDENIED)
         {
             if (PasswordBoxA(m_hWnd, password, _countof(password)))
             {
-                hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 0, password);
+                hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 300.0f, password);
                 if (hr == E_ACCESSDENIED)
                 {
                     CenterMessageBox(m_hWnd, loadString(17), NULL, MB_ICONERROR);
@@ -487,8 +493,6 @@ struct WinApp {
     HBITMAP loadPdf(INT nPageIndex = 0) {
         return loadPdf(m_szFileName, nPageIndex);
     }
-
-    HBITMAP m_hbmOriginal = NULL;
 
     bool loadFile(LPCTSTR pszFileName) {
         HBITMAP hbm;
@@ -558,13 +562,9 @@ struct WinApp {
         ::PostMessage(m_hWnd, WM_SIZE, 0, 0);
     }
 
-    float m_eRotation = 0;
-    float m_eContrast = 0;
-    float m_eBrightness = 0;
-
     void setAdjustment(float eRotation, float eContrast, float eBrightness)
     {
-        float eRadian = eRotation * M_PI / 180.0;
+        float eRadian = eRotation * M_PI / 180.0f;
         HBITMAP hbmRotated = NULL, hbmAdjusted = NULL;
 
         if (eRadian == 0)
@@ -582,8 +582,8 @@ struct WinApp {
 
         if (eContrast != 0.0 || eBrightness != 0.0)
         {
-            float alpha = 1.0 + eContrast / 100.0;
-            float beta = eBrightness * 255 / 100.0;
+            float alpha = 1.0f + eContrast / 100.0f;
+            float beta = eBrightness * 255 / 100.0f;
             hbmAdjusted = ii_32bpp_brightness(hbmRotated, alpha, beta);
             ii_destroy(hbmRotated);
         }
@@ -644,14 +644,14 @@ struct WinApp {
         size_t count = m_recent_files.size();
         for (size_t i = 0; i < count; ++i) {
             if (m_recent_files[i] != m_szFileName) {
-                recent_files.emplace_back(m_recent_files[i]);
+                recent_files.push_back(m_recent_files[i]);
             }
         }
-        recent_files.emplace_front(m_szFileName);
+        recent_files.push_front(m_szFileName);
         if (recent_files.size() > MAX_RECENT) {
             recent_files.resize(MAX_RECENT);
         }
-        m_recent_files = std::move(recent_files);
+        m_recent_files = recent_files;
 
         ::SendDlgItemMessage(m_hTaskDialogs[DLGINDEX_LOADIMAGE], stc1, WM_SETFONT,
             reinterpret_cast<WPARAM>(::GetStockObject(DEFAULT_GUI_FONT)),
@@ -718,7 +718,8 @@ struct WinApp {
         if (m_hbmImage != NULL) {
             BITMAP bm;
             if (::GetObject(m_hbmImage, sizeof(BITMAP), &bm)) {
-                siz = {bm.bmWidth, bm.bmHeight};
+                siz.cx = bm.bmWidth;
+				siz.cy = bm.bmHeight;
             }
         }
         return siz;
@@ -926,7 +927,8 @@ struct WinApp {
             INT nPos;
 
             ::GetClientRect(m_hRealClientWnd, &rc);
-            sizClient = {rc.right - rc.left, rc.bottom - rc.top};
+            sizClient.cx = rc.right - rc.left;
+			sizClient.cy = rc.bottom - rc.top;
 
             if (reset_pos) {
                 nPos = 0;
@@ -985,7 +987,7 @@ struct WinApp {
         DOUBLE cy = (pt0.y + pt1.y) / 2.0;
         INT dx = pt1.x - pt0.x;
         INT dy = pt1.y - pt0.y;
-        DOUBLE distance = sqrt(dx * dx + dy * dy);
+        DOUBLE distance = sqrt((double)(dx * dx + dy * dy));
         DOUBLE radius = distance * 0.5;
         DOUBLE x0 = cx - radius;
         DOUBLE y0 = cy - radius;
@@ -1182,8 +1184,10 @@ struct WinApp {
             return;
         }
         bool flag = false;
-        m_pt0 = {xPos, yPos};
-        m_pt1 = {xPos, yPos};
+        m_pt0.x = xPos;
+		m_pt0.y = yPos;
+        m_pt1.x = xPos;
+		m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
         m_mode = MODE_SEGMENT;
         if (m_bHasSegment) {
@@ -1215,8 +1219,10 @@ struct WinApp {
 
     // WM_MBUTTONDOWN
     void onMButtonDown(UINT fwKeys, INT xPos, INT yPos) {
-        m_pt0 = {xPos, yPos};
-        m_pt1 = {xPos, yPos};
+        m_pt0.x = xPos;
+		m_pt0.y = yPos;
+        m_pt1.x = xPos;
+		m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
         m_two_button_moved = false;
         ::SetCursor(m_ahCursors[IDC_PAN - 1]);
@@ -1224,8 +1230,10 @@ struct WinApp {
 
     // WM_RBUTTONDOWN
     void onRButtonDown(UINT fwKeys, INT xPos, INT yPos) {
-        m_pt0 = {xPos, yPos};
-        m_pt1 = {xPos, yPos};
+        m_pt0.x = xPos;
+		m_pt0.y = yPos;
+        m_pt1.x = xPos;
+		m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
         m_two_button_moved = false;
     } // onRButtonDown
@@ -1321,7 +1329,8 @@ struct WinApp {
 
     // WM_RBUTTONUP
     void onRButtonUp(UINT fwKeys, INT xPos, INT yPos) {
-        m_pt1 = {xPos, yPos};
+        m_pt1.x = xPos;
+		m_pt1.y = yPos;
         if (!m_two_button_moved) {
             INT dx = m_pt1.x - m_pt0.x;
             INT dy = m_pt1.y - m_pt0.y;
@@ -1477,7 +1486,8 @@ struct WinApp {
             ::SetScrollPos(m_hRealClientWnd, SB_VERT, si.nPos, TRUE);
 
             updateClientImage();
-            m_pt0 = {xPos, yPos};
+            m_pt0.x = xPos;
+			m_pt0.y = yPos;
         } else {
             bool flag = false;
             switch (m_nTaskIndex) {
@@ -1513,7 +1523,8 @@ struct WinApp {
                     ::SetCursor(m_ahCursors[IDC_CROSS2 - 1]);
                 }
 
-                m_pt1 = {xPos, yPos};
+                m_pt1.x = xPos;
+				m_pt1.y = yPos;
                 mapClientPixelsToImagePixels(m_pt1, m_ept1);
                 if (m_mode == MODE_PT0) {
                     m_eptSegment0 = m_ept1;
@@ -1942,7 +1953,7 @@ struct WinApp {
                 item.cchTextMax = -1;
                 ::SendDlgItemMessage(hWnd, cmb1, CBEM_INSERTITEM, 0,
                                      reinterpret_cast<LPARAM>(&item));
-                m_unit_names.emplace_back(pchUnit);
+                m_unit_names.push_back(pchUnit);
                 pch += ::lstrlen(pch) + 1;
             }
             ::SendDlgItemMessage(hWnd, cmb1, CB_SETCURSEL, 0, 0);
@@ -1999,7 +2010,7 @@ struct WinApp {
                                 reinterpret_cast<LPBYTE>(&szFilePath), &cbSize
                             );
                             if ((n == ERROR_SUCCESS) && (szFilePath[0] != 0)) {
-                                m_recent_files.emplace_back(szFilePath);
+                                m_recent_files.push_back(szFilePath);
                             } else {
                                 break;
                             }
@@ -2268,7 +2279,9 @@ struct WinApp {
                 if (i >= MAX_RECENT) {
                     break;
                 }
-                tstring str = TEXT("&") + std::to_wstring(i + 1) + TEXT("\t");
+				WCHAR text[64];
+				wsprintfW(text, L"%d", int(i + 1));
+                tstring str = TEXT("&") + tstring(text) + TEXT("\t");
                 str += m_recent_files[i];
                 ::AppendMenu(hRecentMenu, MF_STRING | MF_ENABLED,
                     IDM_RECENT_0 + i, str.c_str());
@@ -2396,7 +2409,7 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             {
             case EN_CHANGE:
                 GetDlgItemTextA(hWnd, edt1, szText, _countof(szText));
-                pApp->setRotation(atof(szText));
+                pApp->setRotation((float)atof(szText));
                 break;
             }
             break;
@@ -2405,13 +2418,13 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             {
             case CBN_EDITCHANGE:
                 GetDlgItemTextA(hWnd, cmb1, szText, _countof(szText));
-                pApp->setBrightness(atoi(szText));
+                pApp->setBrightness((float)atof(szText));
                 break;
             case CBN_SELENDOK:
                 {
                     INT iItem = (INT)::SendDlgItemMessage(hWnd, cmb1, CB_GETCURSEL, 0, 0);
                     ::SendDlgItemMessageA(hWnd, cmb1, CB_GETLBTEXT, iItem, (LPARAM)szText);
-                    pApp->setBrightness(atoi(szText));
+                    pApp->setBrightness((float)atof(szText));
                 }
                 break;
             }
@@ -2421,13 +2434,13 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             {
             case CBN_EDITCHANGE:
                 GetDlgItemTextA(hWnd, cmb2, szText, _countof(szText));
-                pApp->setContrast(atoi(szText));
+                pApp->setContrast((float)atof(szText));
                 break;
             case CBN_SELENDOK:
                 {
                     INT iItem = (INT)::SendDlgItemMessage(hWnd, cmb2, CB_GETCURSEL, 0, 0);
                     ::SendDlgItemMessageA(hWnd, cmb2, CB_GETLBTEXT, iItem, (LPARAM)szText);
-                    pApp->setContrast(atoi(szText));
+                    pApp->setContrast((float)atof(szText));
                 }
                 break;
             }
@@ -2463,8 +2476,8 @@ TaskLoadImageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 else
                     sprintf(szText, "%+.1f", eValue);
                 SetDlgItemTextA(hWnd, edt1, szText);
-                pUpDown->iDelta = pUpDown->iPos = eValue;
-                pApp->setRotation(eValue);
+                pUpDown->iDelta = pUpDown->iPos = (int)eValue;
+                pApp->setRotation((float)eValue);
                 return FALSE;
             }
         }
