@@ -417,8 +417,6 @@ ii_destroy(HBITMAP hbm)
 IMAIO_API bool IIAPI
 ii_get_info(HBITMAP hbm, BITMAP *pbm)
 {
-    assert(hbm);
-    assert(pbm);
     return GetObject(hbm, sizeof(BITMAP), pbm) == sizeof(BITMAP);
 }
 
