@@ -401,6 +401,7 @@ struct WinApp {
 
     INT run() {
         MSG msg;
+
         // message loop
         while (::GetMessage(&msg, NULL, 0, 0)) {
             if (!::TranslateAccelerator(m_hWnd, m_hAccel, &msg)) {
@@ -417,6 +418,9 @@ struct WinApp {
                 }
             }
         }
+
+        pdf2bitmap_uninit(&m_pdfium);
+
         return INT(msg.wParam);
     } // run
 
