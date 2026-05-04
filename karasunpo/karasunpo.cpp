@@ -1853,30 +1853,16 @@ struct WinApp {
 
     void zoomIn() {
         DOUBLE e = m_eZoomPercent;
-        if (e < 50.0) {
-            e += 2.5;
-        } else if (e < 100.0) {
-            e += 5.0;
-        } else if (e < 1000.0) {
-            e += 25.0;
-        } else {
-            e += 250.0;
-        }
+        if (e < 8000)
+            e *= 1.2;
         setZoomRate(e);
         m_fit_mode = FIT_NONE;
     }
 
     void zoomOut() {
         DOUBLE e = m_eZoomPercent;
-        if (e < 50.0) {
-            e -= 2.5;
-        } else if (e < 100.0) {
-            e -= 5.0;
-        } else if (e < 1000.0) {
-            e -= 25.0;
-        } else {
-            e -= 250.0;
-        }
+        if (e >= 2)
+            e *= 0.8;
         setZoomRate(e);
         m_fit_mode = FIT_NONE;
     }
