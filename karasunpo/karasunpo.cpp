@@ -268,6 +268,7 @@ struct WinApp {
     float m_eRotation;
     float m_eContrast;
     float m_eBrightness;
+    CHAR  m_szPdfPassword[128]; // cached PDF password (reused across page loads)
 
     // --- Base image cache (background + StretchBlt image, no overlays) ---
     // Rebuilt only when zoom/scroll/image changes; overlay is drawn on top cheaply.
@@ -318,10 +319,11 @@ struct WinApp {
         m_is_pdf = false;
         m_nPageIndex = 0;
         m_nPageCount = 0;
-		m_hbmOriginal = NULL;
-		m_eRotation = 0;
-		m_eContrast = 0;
-		m_eBrightness = 0;
+        m_hbmOriginal = NULL;
+        m_eRotation = 0;
+        m_eContrast = 0;
+        m_eBrightness = 0;
+        m_szPdfPassword[0] = '\0';
         m_hbmBase = NULL;
         m_bBaseDirty = true;
         m_bDragging = false;
@@ -480,21 +482,26 @@ struct WinApp {
 
     HBITMAP loadPdf(LPCWSTR pszFileName, INT nPageIndex = 0) {
         HBITMAP hbm = NULL;
-        CHAR password[128] = "";
 
-        HRESULT hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 300.0f, NULL);
+        // 同じファイルを開いている間はキャッシュ済みパスワードをまず試みる
+        HRESULT hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 300.0f,
+                                m_szPdfPassword[0] ? m_szPdfPassword : NULL);
         while (hr == E_ACCESSDENIED)
         {
-            if (PasswordBoxA(m_hWnd, password, _countof(password)))
+            if (PasswordBoxA(m_hWnd, m_szPdfPassword, _countof(m_szPdfPassword)))
             {
-                hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 300.0f, password);
+                hr = pdf2bitmap(&m_pdfium, pszFileName, &hbm, nPageIndex, 300.0f, m_szPdfPassword);
                 if (hr == E_ACCESSDENIED)
                 {
+                    // 間違っていたらキャッシュをクリアしてもう一度聞く
+                    m_szPdfPassword[0] = '\0';
                     CenterMessageBox(m_hWnd, loadString(17), NULL, MB_ICONERROR);
                 }
             }
             else
             {
+                // キャンセル時はキャッシュをクリア
+                m_szPdfPassword[0] = '\0';
                 break;
             }
         }
@@ -553,12 +560,16 @@ struct WinApp {
             m_is_pdf = true;
         } else {
             m_is_pdf = false;
+            m_szPdfPassword[0] = '\0'; // PDFでないファイルを開いたらパスワードをクリア
         }
         if (m_hbmImage != NULL) {
             ::DeleteObject(m_hbmImage);
         }
         m_hbmImage = hbm;
         m_eImageDPI = dpi;
+        // 異なるファイルに切り替わったらパスワードをクリア
+        if (::lstrcmp(m_szFileName, pszFileName) != 0)
+            m_szPdfPassword[0] = '\0';
         ::lstrcpyn(m_szFileName, pszFileName, MAX_PATH);
         updateScrollInfo(true);
         invalidateBase(); // new image → must rebuild base
@@ -745,7 +756,7 @@ struct WinApp {
             BITMAP bm;
             if (::GetObject(m_hbmImage, sizeof(BITMAP), &bm)) {
                 siz.cx = bm.bmWidth;
-				siz.cy = bm.bmHeight;
+                siz.cy = bm.bmHeight;
             }
         }
         return siz;
@@ -956,7 +967,7 @@ struct WinApp {
 
             ::GetClientRect(m_hRealClientWnd, &rc);
             sizClient.cx = rc.right - rc.left;
-			sizClient.cy = rc.bottom - rc.top;
+            sizClient.cy = rc.bottom - rc.top;
 
             if (reset_pos) {
                 nPos = 0;
@@ -1296,9 +1307,9 @@ struct WinApp {
         }
         bool flag = false;
         m_pt0.x = xPos;
-		m_pt0.y = yPos;
+        m_pt0.y = yPos;
         m_pt1.x = xPos;
-		m_pt1.y = yPos;
+        m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
         m_mode = MODE_SEGMENT;
         if (m_bHasSegment) {
@@ -1331,9 +1342,9 @@ struct WinApp {
     // WM_MBUTTONDOWN
     void onMButtonDown(UINT fwKeys, INT xPos, INT yPos) {
         m_pt0.x = xPos;
-		m_pt0.y = yPos;
+        m_pt0.y = yPos;
         m_pt1.x = xPos;
-		m_pt1.y = yPos;
+        m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
         m_bDragging = true;
         m_two_button_moved = false;
@@ -1343,9 +1354,9 @@ struct WinApp {
     // WM_RBUTTONDOWN
     void onRButtonDown(UINT fwKeys, INT xPos, INT yPos) {
         m_pt0.x = xPos;
-		m_pt0.y = yPos;
+        m_pt0.y = yPos;
         m_pt1.x = xPos;
-		m_pt1.y = yPos;
+        m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
         m_two_button_moved = false;
     } // onRButtonDown
@@ -1448,7 +1459,7 @@ struct WinApp {
     // WM_RBUTTONUP
     void onRButtonUp(UINT fwKeys, INT xPos, INT yPos) {
         m_pt1.x = xPos;
-		m_pt1.y = yPos;
+        m_pt1.y = yPos;
         if (m_bDragging) {
             // two-button pan ended: rebuild base at full halftone quality
             m_bDragging = false;
@@ -1612,7 +1623,7 @@ struct WinApp {
             invalidateBase(); // scroll position changed during pan
             updateClientImage();
             m_pt0.x = xPos;
-			m_pt0.y = yPos;
+            m_pt0.y = yPos;
         } else {
             bool flag = false;
             switch (m_nTaskIndex) {
@@ -1649,7 +1660,7 @@ struct WinApp {
                 }
 
                 m_pt1.x = xPos;
-				m_pt1.y = yPos;
+                m_pt1.y = yPos;
                 mapClientPixelsToImagePixels(m_pt1, m_ept1);
                 if (m_mode == MODE_PT0) {
                     m_eptSegment0 = m_ept1;
@@ -2407,8 +2418,8 @@ struct WinApp {
                 if (i >= MAX_RECENT) {
                     break;
                 }
-				WCHAR text[64];
-				wsprintfW(text, L"%d", int(i + 1));
+                WCHAR text[64];
+                wsprintfW(text, L"%d", int(i + 1));
                 tstring str = TEXT("&") + tstring(text) + TEXT("\t");
                 str += m_recent_files[i];
                 ::AppendMenu(hRecentMenu, MF_STRING | MF_ENABLED,
