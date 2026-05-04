@@ -17,6 +17,7 @@ endif()
 target_link_libraries(karasunpo PRIVATE
     comctl32
     imaio
+    msimg32
 #    ${GIF_LIBRARIES}
 #    ${JPEG_LIBRARIES}
 #    ${PNG_LIBRARIES}

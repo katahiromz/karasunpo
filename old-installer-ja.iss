@@ -6,18 +6,18 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2A516438-9675-40B5-AE5B-D94756F3CABD}
-AppName=画像カラスンポ
-AppVerName=画像カラスンポ 1.6
+AppName=画像カラスンポPro
+AppVerName=画像カラスンポPro 1.7
 AppPublisher=片山博文MZ
 AppPublisherURL=http://katahiromz.web.fc2.com/
 AppSupportURL=http://katahiromz.web.fc2.com/
 AppUpdatesURL=http://katahiromz.web.fc2.com/
 DefaultDirName={pf}\karasunpo
-DefaultGroupName=画像カラスンポ
+DefaultGroupName=画像カラスンポPro
 AllowNoIcons=yes
 LicenseFile=LICENSE.txt
 OutputDir=.
-OutputBaseFilename=karasunpo-ja-1.6-setup
+OutputBaseFilename=karasunpo-ja-1.7-setup
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\karasunpo.exe

@@ -618,6 +618,11 @@ struct WinApp {
             ii_destroy(m_hbmImage);
             m_hbmImage = hbmAdjusted;
 
+            // AlphaBlend (AC_SRC_ALPHA) は事前乗算済み PARGB を要求するため、
+            // m_hbmImage が確定したここで一度だけ premultiply する。
+            // 32bpp 以外のビットマップには何もしないので JPG/BMP でも安全。
+            ii_premultiply(m_hbmImage);
+
             updateScrollInfo(true);
             invalidateBase(); // image data changed → rebuild base
             updateClientImage();
@@ -1075,24 +1080,60 @@ struct WinApp {
                     y = (sizClient.cy - cy) / 2 - ::GetScrollPos(m_hRealClientWnd, SB_VERT);
                 }
 
-                HDC hdcMem2 = ::CreateCompatibleDC(hdc);
-                HGDIOBJ hbm2Old = ::SelectObject(hdcMem2, m_hbmImage);
+                int ix  = getRounded(x),  iy  = getRounded(y);
+                int icx = getRounded(cx), icy = getRounded(cy);
 
-                // Use fast (lower-quality) stretch during active pan drag;
-                // use HALFTONE the rest of the time for sub-100% zoom.
-                if (m_bDragging || m_eZoomPercent >= 200) {
-                    ::SetStretchBltMode(hdcBase, STRETCH_DELETESCANS);
+                // 画像が 32bpp (αチャンネルあり) かどうか確認
+                BITMAP bmInfo;
+                bool hasAlpha = (::GetObject(m_hbmImage, sizeof(BITMAP), &bmInfo) != 0 &&
+                                 bmInfo.bmBitsPixel == 32);
+
+                // αあり: 市松模様を先に敷き、AlphaBlend で合成
+                if (hasAlpha) {
+                    HBITMAP hbmChecker = ii_create_24bpp_checker(icx, icy);
+                    if (hbmChecker) {
+                        HDC hdcChecker = ::CreateCompatibleDC(hdc);
+                        HGDIOBJ hbmCheckerOld = ::SelectObject(hdcChecker, hbmChecker);
+                        ::BitBlt(hdcBase, ix, iy, icx, icy, hdcChecker, 0, 0, SRCCOPY);
+                        ::SelectObject(hdcChecker, hbmCheckerOld);
+                        ::DeleteDC(hdcChecker);
+                        ::DeleteObject(hbmChecker);
+                    }
+
+                    // AlphaBlend はストレッチと合成を同時に行う
+                    // (setAdjustment で ii_premultiply 済みなので AC_SRC_ALPHA が使える)
+                    HDC hdcMem2 = ::CreateCompatibleDC(hdc);
+                    HGDIOBJ hbm2Old = ::SelectObject(hdcMem2, m_hbmImage);
+
+                    BLENDFUNCTION bf;
+                    bf.BlendOp             = AC_SRC_OVER;
+                    bf.BlendFlags          = 0;
+                    bf.SourceConstantAlpha = 255;
+                    bf.AlphaFormat         = AC_SRC_ALPHA;
+                    ::AlphaBlend(hdcBase, ix, iy, icx, icy,
+                                 hdcMem2, 0, 0, sizImage.cx, sizImage.cy, bf);
+
+                    ::SelectObject(hdcMem2, hbm2Old);
+                    ::DeleteDC(hdcMem2);
                 } else {
-                    ::SetStretchBltMode(hdcBase, STRETCH_HALFTONE);
-                }
-                ::StretchBlt(
-                    hdcBase, getRounded(x), getRounded(y), getRounded(cx), getRounded(cy),
-                    hdcMem2, 0, 0, sizImage.cx, sizImage.cy, SRCCOPY
-                );
+                    // αなし: 従来どおり StretchBlt
+                    HDC hdcMem2 = ::CreateCompatibleDC(hdc);
+                    HGDIOBJ hbm2Old = ::SelectObject(hdcMem2, m_hbmImage);
 
-                ::SelectObject(hdcMem2, hbm2Old);
-                ::DeleteDC(hdcMem2);
-            }
+                    if (m_bDragging || m_eZoomPercent >= 200) {
+                        ::SetStretchBltMode(hdcBase, STRETCH_DELETESCANS);
+                    } else {
+                        ::SetStretchBltMode(hdcBase, STRETCH_HALFTONE);
+                    }
+                    ::StretchBlt(
+                        hdcBase, ix, iy, icx, icy,
+                        hdcMem2, 0, 0, sizImage.cx, sizImage.cy, SRCCOPY
+                    );
+
+                    ::SelectObject(hdcMem2, hbm2Old);
+                    ::DeleteDC(hdcMem2);
+                }
+            }  // if (m_hbmImage != NULL)
 
             ::SelectObject(hdcBase, hbmBaseOld);
             ::DeleteDC(hdcBase);
