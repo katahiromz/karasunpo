@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="6A1AB76D-8487-4C1C-AE39-0B4E2137EFB0" Name="Karasunpo Pro" Language="1033" Version="1.5" Manufacturer="Katayama Hirofumi MZ" UpgradeCode="4CBBFE76-A4BE-42E1-BB94-56B70D22CB3A" Codepage="1252">
+    <Product Id="6A1AB76D-8487-4C1C-AE39-0B4E2137EFB0" Name="Karasunpo Pro" Language="1033" Version="1.6" Manufacturer="Katayama Hirofumi MZ" UpgradeCode="4CBBFE76-A4BE-42E1-BB94-56B70D22CB3A" Codepage="1252">
         <Package Description="Karasunpo Pro" Comments="Measures nominal length/angle" InstallerVersion="200" Compressed="yes" SummaryCodepage="1252" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" CompressionLevel="high" />
         <Directory Id="TARGETDIR" Name="SourceDir">
@@ -17,6 +17,9 @@
                     </Component>
                     <Component Id="LICENSE.txt" Guid="A98E60BD-6C92-4787-9248-9796AFDC0E5C">
                         <File Id="LICENSE.TXT" Name="LICENSE.txt" Source="LICENSE.txt" />
+                    </Component>
+                    <Component Id="ChangeLog.txt" Guid="AAD51070-B2A2-4867-9A2F-C656BD309398">
+                        <File Id="CHANGELOG.TXT" Name="ChangeLog.txt" Source="ChangeLog.txt" />
                     </Component>
                     <Component Id="PDFIUM.DLL" DiskId="1" Guid="7C9B31D2-66C3-4E45-ABD4-5F5D9C4A9A5B">
                         <File Id="PDFIUM.DLL" Name="pdfium.dll" Source="katahiromz_pdfium\x86\pdfium.dll" />
@@ -35,6 +38,7 @@
                 <Shortcut Id="UninstallProduct" Name="Uninstall Karasunpo" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstalls Karasunpo" />
                 <Shortcut Id="README.TXT" Name="README.txt" Target="[APPLICATIONROOTDIRECTORY]README.txt" Description="Read me first" />
                 <Shortcut Id="LICENSE.TXT" Name="LICENSE.txt" Target="[APPLICATIONROOTDIRECTORY]LICENSE.txt" Description="License" />
+                <Shortcut Id="CHANGELOG.TXT" Name="ChangeLog.txt" Target="[APPLICATIONROOTDIRECTORY]ChangeLog.txt" Description="Changelog" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
@@ -46,6 +50,7 @@
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="karasunpo.exe" />
             <ComponentRef Id="LICENSE.txt" />
+            <ComponentRef Id="ChangeLog.txt" />
             <ComponentRef Id="README.txt" />
             <ComponentRef Id="PDFIUM.DLL" />
             <ComponentRef Id="ApplicationShortcut" />

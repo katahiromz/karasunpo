@@ -1,0 +1,35 @@
+﻿# 変更履歴 (ChangeLog)
+
+- 2015年9月20日 ver.0.0 初公開。
+- 2015年9月22日 ver.0.3 PDFの読み込みをサポート。操作系の劇的な改良。
+- 2015年9月22日 ver.0.4 ちょっとファイルを間違えたので修正。
+- 2015年9月27日 ver.0.5 線分の色を変更可能にし、デフォルトを赤にした。
+- 2015年10月3日 ver.0.6 単位が正しくコピーされるようにした。「最近使ったファイル」機能を追加した。 キーボードの「＋」「－」でズームイン／ズームアウトができるようになった。 マウスポインターの形を変えて動作を伝えるようにした。 ページ移動を「Alt+→」「Alt+←」に変えた。
+- 2019年6月18日 ver.0.7 インストーラを改良。補助円のペンスタイルを修正。「書く」を「描く」に修正。脆弱性の修正。2KおよびXPのサポート終了。
+- 2019年8月31日 ver.0.8 インストーラとデプロイを修正＆改良。
+- 2021年5月10日 ver.0.9 XPサポートを回復。英語のUIを改良。
+- 2021年5月14日 ver.1.0 インストーラをMSIに移行。英語のUIをさらに改良。
+- 2021年5月28日 ver.1.1 シェアウェア化（Pro）。パスワード付きPDFを開けるようにした。PDFiumを更新。日本語マニュアルを追加。
+- 2021年10月8日 ver.1.2 再び無料化（Pro）。回転・明るさ・コントラストを調節できるようにした。
+- 2026年4月3日 ver.1.3 ライセンスを更新。画像/PDF読み込み時の脆弱性への対処。
+- 2026年4月3日 ver.1.4 ケアレスミスでリリースやり直し。
+- 2026年4月4日 ver.1.5 メモリリークを修正。
+- 2026年5月4日 ver.1.6 高速化。
+
+# ChangeLog
+
+- September 20, 2015 ver.0.0 Initial release.
+- September 22, 2015 ver.0.3 Added support for PDF loading. Dramatically improved the user interface.
+- September 22, 2015 ver.0.4 Corrected a minor file error.
+- September 27, 2015 ver.0.5 Made it possible to change the line segment color, setting the default to red.
+- October 3, 2015 ver.0.6 Ensured units are copied correctly. Added a "Recently Used Files" function. Zoom in/out is now possible using the "+" and "-" keys on the keyboard. Changed the mouse pointer shape to indicate actions. Changed page navigation to "Alt+→" and "Alt+←".
+- June 18, 2019 ver.0.7 Improved the installer. Corrected the pen style of the auxiliary circle. Changed "Write" to "Draw". Fixed vulnerabilities. End of support for 2K and XP.
+- August 31, 2019 ver.0.8 Fixed and improved installer and deployment.
+- May 10, 2021 ver.0.9 Restored XP support. Improved English UI.
+- May 14, 2021 ver.1.0 Migrated installer to MSI. Further improved English UI.
+- May 28, 2021 ver.1.1 Became shareware (Pro). Added the ability to open password-protected PDFs. Updated PDFium. Added Japanese manual.
+- October 8, 2021 ver.1.2 Made it free again (Pro). Added the ability to adjust rotation, brightness, and contrast.
+- April 3, 2026 ver.1.3 Updated license. Addressed vulnerabilities when loading images/PDFs.
+- April 3, 2026 ver.1.4 Re-released due to a careless mistake.
+- April 4, 2026 ver.1.5 Fixed memory leak.
+- May 4, 2026 ver.1.6 Speed ​​up.

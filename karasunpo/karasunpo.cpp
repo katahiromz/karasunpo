@@ -269,6 +269,13 @@ struct WinApp {
     float m_eContrast;
     float m_eBrightness;
 
+    // --- Base image cache (background + StretchBlt image, no overlays) ---
+    // Rebuilt only when zoom/scroll/image changes; overlay is drawn on top cheaply.
+    HBITMAP m_hbmBase;      // cached base bitmap (no overlays)
+    bool    m_bBaseDirty;   // true = m_hbmBase must be rebuilt before next draw
+    bool    m_bDragging;    // true while pan-drag is active (use faster stretch mode)
+    SIZE    m_sizBase;      // client size at the time m_hbmBase was built
+
     std::deque<std::wstring>    m_recent_files;
     HCURSOR     m_ahCursors[5];
 
@@ -315,6 +322,10 @@ struct WinApp {
 		m_eRotation = 0;
 		m_eContrast = 0;
 		m_eBrightness = 0;
+        m_hbmBase = NULL;
+        m_bBaseDirty = true;
+        m_bDragging = false;
+        m_sizBase.cx = m_sizBase.cy = 0;
         m_seg_color = SC_RED;
         for (int i = 0; i < 5; ++i) {
             m_ahCursors[i] = ::LoadCursor(hInst, MAKEINTRESOURCE(IDC_PAN + i));
@@ -325,6 +336,10 @@ struct WinApp {
         for (int i = 0; i < 5; ++i) {
             ::DestroyCursor(m_ahCursors[i]);
             m_ahCursors[i] = NULL;
+        }
+        if (m_hbmBase != NULL) {
+            ::DeleteObject(m_hbmBase);
+            m_hbmBase = NULL;
         }
     }
 
@@ -546,6 +561,7 @@ struct WinApp {
         m_eImageDPI = dpi;
         ::lstrcpyn(m_szFileName, pszFileName, MAX_PATH);
         updateScrollInfo(true);
+        invalidateBase(); // new image → must rebuild base
         updateClientImage();
         onOpened();
         return true;
@@ -603,6 +619,7 @@ struct WinApp {
             m_hbmImage = hbmAdjusted;
 
             updateScrollInfo(true);
+            invalidateBase(); // image data changed → rebuild base
             updateClientImage();
             m_fit_mode = FIT_WHOLE;
             fitWhile();
@@ -847,6 +864,7 @@ struct WinApp {
             m_hbmImage = hbm;
             m_nPageIndex = nIndex;
             updateScrollInfo(true);
+            invalidateBase(); // page changed → rebuild base
             updateClientImage();
         }
     }
@@ -877,6 +895,7 @@ struct WinApp {
                     y *= e / eOldZoom;
                     ::SetScrollPos(m_hRealClientWnd, SB_HORZ, getRounded(x), TRUE);
                     ::SetScrollPos(m_hRealClientWnd, SB_VERT, getRounded(y), TRUE);
+                    invalidateBase(); // zoom changed → must rebuild base
                     updateClientImage();
                     updateStatusBar();
                 }
@@ -1002,59 +1021,108 @@ struct WinApp {
             getRounded(x1), getRounded(y1));
     }
 
-    void updateClientImage() {
-        if (m_hbmClient != NULL) {
-            ::DeleteObject(m_hbmClient);
-            m_hbmClient = NULL;
-        }
+    // Helper: mark the base image as dirty (forces StretchBlt rebuild on next draw)
+    void invalidateBase() {
+        m_bBaseDirty = true;
+    }
 
+    void updateClientImage() {
         SIZE sizClient = getRealClientSize();
+        bool sizeChanged = (m_sizBase.cx != sizClient.cx || m_sizBase.cy != sizClient.cy);
 
         HDC hdc = ::GetDC(m_hRealClientWnd);
         m_display_dpi.x = DOUBLE(::GetDeviceCaps(hdc, LOGPIXELSX));
         m_display_dpi.y = DOUBLE(::GetDeviceCaps(hdc, LOGPIXELSY));
 
+        // ----------------------------------------------------------------
+        // Phase 1 (EXPENSIVE): Rebuild base bitmap only when necessary.
+        //   Triggered by: image load, zoom change, scroll/pan, window resize.
+        //   During pure segment-line dragging the base stays valid, so this
+        //   phase is skipped entirely → huge speedup for large images.
+        // ----------------------------------------------------------------
+        if (m_bBaseDirty || sizeChanged || m_hbmBase == NULL) {
+            if (m_hbmBase != NULL) {
+                ::DeleteObject(m_hbmBase);
+                m_hbmBase = NULL;
+            }
+            m_sizBase = sizClient;
+
+            HDC hdcBase = ::CreateCompatibleDC(hdc);
+            m_hbmBase = ::CreateCompatibleBitmap(hdc, sizClient.cx, sizClient.cy);
+            RECT rcFill = {0, 0, sizClient.cx, sizClient.cy};
+            HGDIOBJ hbmBaseOld = ::SelectObject(hdcBase, m_hbmBase);
+
+            HBRUSH hbr = reinterpret_cast<HBRUSH>(::GetStockObject(GRAY_BRUSH));
+            ::FillRect(hdcBase, &rcFill, hbr);
+
+            if (m_hbmImage != NULL) {
+                DOUBLE x, y, cx, cy;
+                SIZE sizImage = getImageSize();
+                ESize esizImage = getZoomedImageSize();
+                cx = esizImage.cx;
+                cy = esizImage.cy;
+
+                if (cx <= sizClient.cx) {
+                    x = (sizClient.cx - cx) / 2;
+                    ::SetScrollPos(m_hRealClientWnd, SB_HORZ, 0, TRUE);
+                } else {
+                    x = (sizClient.cx - cx) / 2 - ::GetScrollPos(m_hRealClientWnd, SB_HORZ);
+                }
+                if (cy <= sizClient.cy) {
+                    y = (sizClient.cy - cy) / 2;
+                    ::SetScrollPos(m_hRealClientWnd, SB_VERT, 0, TRUE);
+                } else {
+                    y = (sizClient.cy - cy) / 2 - ::GetScrollPos(m_hRealClientWnd, SB_VERT);
+                }
+
+                HDC hdcMem2 = ::CreateCompatibleDC(hdc);
+                HGDIOBJ hbm2Old = ::SelectObject(hdcMem2, m_hbmImage);
+
+                // Use fast (lower-quality) stretch during active pan drag;
+                // use HALFTONE the rest of the time for sub-100% zoom.
+                if (m_bDragging || m_eZoomPercent >= 200) {
+                    ::SetStretchBltMode(hdcBase, STRETCH_DELETESCANS);
+                } else {
+                    ::SetStretchBltMode(hdcBase, STRETCH_HALFTONE);
+                }
+                ::StretchBlt(
+                    hdcBase, getRounded(x), getRounded(y), getRounded(cx), getRounded(cy),
+                    hdcMem2, 0, 0, sizImage.cx, sizImage.cy, SRCCOPY
+                );
+
+                ::SelectObject(hdcMem2, hbm2Old);
+                ::DeleteDC(hdcMem2);
+            }
+
+            ::SelectObject(hdcBase, hbmBaseOld);
+            ::DeleteDC(hdcBase);
+            m_bBaseDirty = false;
+        }
+
+        // ----------------------------------------------------------------
+        // Phase 2 (CHEAP): Copy base → client bitmap, then draw overlays.
+        //   This runs on every WM_MOUSEMOVE, but it is just a BitBlt + a
+        //   couple of GDI line/circle calls — very fast even for huge images.
+        // ----------------------------------------------------------------
+        if (m_hbmClient != NULL) {
+            ::DeleteObject(m_hbmClient);
+            m_hbmClient = NULL;
+        }
+
         HDC hdcMem1 = ::CreateCompatibleDC(hdc);
         m_hbmClient = ::CreateCompatibleBitmap(hdc, sizClient.cx, sizClient.cy);
         RECT rcClient = {0, 0, sizClient.cx, sizClient.cy};
+        HGDIOBJ hbm1Old = ::SelectObject(hdcMem1, m_hbmClient);
 
-        HGDIOBJ hbm1Old = SelectObject(hdcMem1, m_hbmClient);
-        HBRUSH hbr = reinterpret_cast<HBRUSH>(::GetStockObject(GRAY_BRUSH));
-        ::FillRect(hdcMem1, &rcClient, hbr);
+        // Copy base (no StretchBlt here — just a fast BitBlt)
+        HDC hdcBase2 = ::CreateCompatibleDC(hdc);
+        HGDIOBJ hbmBase2Old = ::SelectObject(hdcBase2, m_hbmBase);
+        ::BitBlt(hdcMem1, 0, 0, sizClient.cx, sizClient.cy, hdcBase2, 0, 0, SRCCOPY);
+        ::SelectObject(hdcBase2, hbmBase2Old);
+        ::DeleteDC(hdcBase2);
+
+        // Draw overlays on top of the copied base
         if (m_hbmImage != NULL) {
-            DOUBLE x, y, cx, cy;
-
-            SIZE sizImage = getImageSize();
-            ESize esizImage = getZoomedImageSize();
-            cx = esizImage.cx;
-            cy = esizImage.cy;
-            if (cx <= sizClient.cx) {
-                x = (sizClient.cx - cx) / 2;
-                ::SetScrollPos(m_hRealClientWnd, SB_HORZ, 0, TRUE);
-            } else {
-                x = (sizClient.cx - cx) / 2 - ::GetScrollPos(m_hRealClientWnd, SB_HORZ);
-            }
-
-            if (cy <= sizClient.cy) {
-                y = (sizClient.cy - cy) / 2;
-                ::SetScrollPos(m_hRealClientWnd, SB_VERT, 0, TRUE);
-            } else {
-                y = (sizClient.cy - cy) / 2 - ::GetScrollPos(m_hRealClientWnd, SB_VERT);
-            }
-
-            HDC hdcMem2 = ::CreateCompatibleDC(hdc);
-            HGDIOBJ hbm2Old = ::SelectObject(hdcMem2, m_hbmImage);
-
-            if (m_eZoomPercent < 200) {
-                ::SetStretchBltMode(hdcMem1, STRETCH_HALFTONE);
-            } else {
-                ::SetStretchBltMode(hdcMem1, STRETCH_DELETESCANS);
-            }
-            ::StretchBlt(
-                hdcMem1, getRounded(x), getRounded(y), getRounded(cx), getRounded(cy),
-                hdcMem2, 0, 0, sizImage.cx, sizImage.cy, SRCCOPY
-            );
-
             if (m_mode == MODE_SEGMENT) {
                 POINT pt0, pt1;
                 mapImagePixelsToClientPixels(m_ept0, pt0);
@@ -1141,10 +1209,8 @@ struct WinApp {
                 ::SelectObject(hdcMem1, hPenOld);
                 ::DeleteObject(hPen);
             }
-
-            ::SelectObject(hdcMem2, hbm2Old);
-            ::DeleteDC(hdcMem2);
         }
+
         ::SelectObject(hdcMem1, hbm1Old);
         ::DeleteDC(hdcMem1);
 
@@ -1228,6 +1294,7 @@ struct WinApp {
         m_pt1.x = xPos;
 		m_pt1.y = yPos;
         mapClientPixelsToImagePixels(m_pt0, m_ept0);
+        m_bDragging = true;
         m_two_button_moved = false;
         ::SetCursor(m_ahCursors[IDC_PAN - 1]);
     } // onMButtonDown
@@ -1316,6 +1383,12 @@ struct WinApp {
 
     // WM_MBUTTONUP
     void onMButtonUp(UINT fwKeys, INT xPos, INT yPos) {
+        if (m_bDragging) {
+            // Pan drag ended: rebuild base at full quality (HALFTONE)
+            m_bDragging = false;
+            invalidateBase();
+            updateClientImage();
+        }
         ::SetCursor(::LoadCursor(m_hInst, IDC_ARROW));
     } // onMButtonUp
 
@@ -1335,7 +1408,12 @@ struct WinApp {
     void onRButtonUp(UINT fwKeys, INT xPos, INT yPos) {
         m_pt1.x = xPos;
 		m_pt1.y = yPos;
-        if (!m_two_button_moved) {
+        if (m_bDragging) {
+            // two-button pan ended: rebuild base at full halftone quality
+            m_bDragging = false;
+            invalidateBase();
+            updateClientImage();
+        } else if (!m_two_button_moved) {
             INT dx = m_pt1.x - m_pt0.x;
             INT dy = m_pt1.y - m_pt0.y;
             if (abs(dx) + abs(dy) <= 2) {
@@ -1458,6 +1536,7 @@ struct WinApp {
         )
         {
             // wheel dragging
+            m_bDragging = true; // use fast StretchBlt mode during pan
             ::SetCursor(m_ahCursors[IDC_PAN - 1]);
 
             siz.cx = m_pt0.x - xPos;
@@ -1489,6 +1568,7 @@ struct WinApp {
             }
             ::SetScrollPos(m_hRealClientWnd, SB_VERT, si.nPos, TRUE);
 
+            invalidateBase(); // scroll position changed during pan
             updateClientImage();
             m_pt0.x = xPos;
 			m_pt0.y = yPos;
@@ -1804,6 +1884,7 @@ struct WinApp {
             si.nPos = si.nMin;
         }
         ::SetScrollInfo(m_hRealClientWnd, SB_HORZ, &si, TRUE);
+        invalidateBase(); // scroll position changed → must rebuild base
         updateClientImage();
     } // onHScroll
 
@@ -1847,6 +1928,7 @@ struct WinApp {
             si.nPos = si.nMin;
         }
         ::SetScrollInfo(m_hRealClientWnd, SB_VERT, &si, TRUE);
+        invalidateBase(); // scroll position changed → must rebuild base
         updateClientImage();
     } // onVScroll
 
@@ -1916,6 +1998,7 @@ struct WinApp {
         updateScrollInfo();
         switch (m_fit_mode) {
         case FIT_NONE:
+            invalidateBase(); // client area resized → must rebuild base
             updateClientImage();
             break;
         case FIT_WHOLE:
