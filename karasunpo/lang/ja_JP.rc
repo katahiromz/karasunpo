@@ -256,8 +256,8 @@ FILETYPE        0x1
 
 STRINGTABLE
 {
-    1, "画像カラスンポ ver.1.6 by 片山博文MZ"
-    2, "画像カラスンポ"
+    1, "画像カラスンポ Pro ver.1.6 by 片山博文MZ"
+    2, "画像カラスンポ Pro"
     3, "PDFまたは画像ファイルを開く"
     4, "PDF文書か画像ファイル|*.pdf;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|PDF文書 (*.pdf)|*.pdf|画像ファイル (*.jpg;*.png;*.gif;*.tif;*.bmp)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.gif;*.tif;*.tiff;*.bmp;*.dib|JPEG画像 (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG画像 (*.png)|*.png|GIF画像 (*.gif)|*.gif|TIFF画像 (*.tif;*.tiff)|*.tif;*.tiff|ビットマップ画像 (*.bmp;*.dib)|*.bmp;*.dib|すべてのファイル (*.*)|*.*|"
     5, "残念、開けませんでした。"
