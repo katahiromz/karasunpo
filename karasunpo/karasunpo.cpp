@@ -1852,16 +1852,22 @@ struct WinApp {
     }
 
     void zoomIn() {
+        BITMAP bm;
+        GetObject(m_hbmImage, sizeof(bm), &bm);
+
         DOUBLE e = m_eZoomPercent;
-        if (e < 8000)
+        if (bm.bmWidth * e / 100 < 3000 && bm.bmHeight * e / 100 < 3000)
             e *= 1.2;
         setZoomRate(e);
         m_fit_mode = FIT_NONE;
     }
 
     void zoomOut() {
+        BITMAP bm;
+        GetObject(m_hbmImage, sizeof(bm), &bm);
+
         DOUBLE e = m_eZoomPercent;
-        if (e >= 2)
+        if (bm.bmWidth * e / 100 >= 10 && bm.bmHeight * e / 100 >= 10)
             e *= 0.8;
         setZoomRate(e);
         m_fit_mode = FIT_NONE;
