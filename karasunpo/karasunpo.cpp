@@ -520,6 +520,39 @@ struct WinApp {
         return loadPdf(m_szFileName, nPageIndex);
     }
 
+    // IDM_PASTE
+    void onPaste() {
+        if (m_nTaskIndex > DLGINDEX_LOADIMAGE)
+            return;
+        if (!IsClipboardFormatAvailable(CF_BITMAP) || !OpenClipboard(m_hWnd))
+            return;
+
+        HBITMAP hbm = (HBITMAP)GetClipboardData(CF_BITMAP);
+        CloseClipboard();
+
+        if (!hbm)
+            return;
+
+        HBITMAP hbm24bpp = ii_24bpp(hbm);
+        DeleteObject(hbm);
+        if (!hbm24bpp)
+            return;
+        hbm = hbm24bpp;
+
+        m_szPdfPassword[0] = '\0';
+
+        if (m_hbmImage) {
+            ::DeleteObject(m_hbmImage);
+        }
+        m_hbmImage = hbm;
+        m_eImageDPI = 96;
+        m_szFileName[0] = 0;
+        updateScrollInfo(true);
+        invalidateBase(); // new image → must rebuild base
+        updateClientImage();
+        onOpened();
+    }
+
     bool loadFile(LPCTSTR pszFileName) {
         HBITMAP hbm;
         LPCTSTR pszDotExt = ii_find_dotext(pszFileName);
@@ -568,7 +601,7 @@ struct WinApp {
         m_hbmImage = hbm;
         m_eImageDPI = dpi;
         // 異なるファイルに切り替わったらパスワードをクリア
-        if (::lstrcmp(m_szFileName, pszFileName) != 0)
+        if (m_szFileName[0] && ::lstrcmp(m_szFileName, pszFileName) != 0)
             m_szPdfPassword[0] = '\0';
         ::lstrcpyn(m_szFileName, pszFileName, MAX_PATH);
         updateScrollInfo(true);
@@ -722,6 +755,9 @@ struct WinApp {
 
     // WM_DROPFILES
     void onDropFiles(HDROP hDrop) {
+        if (m_nTaskIndex > DLGINDEX_LOADIMAGE)
+            return;
+
         TCHAR szPath[MAX_PATH];
         ::DragQueryFile(hDrop, 0, szPath, MAX_PATH);
         loadFile(szPath);
@@ -3255,6 +3291,9 @@ WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             break;
         case IDM_ZOOM_OUT:
             pApp->zoomOut();
+            break;
+        case IDM_PASTE:
+            pApp->onPaste();
             break;
         }
         break;

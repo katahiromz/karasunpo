@@ -55,6 +55,7 @@
 #define IDM_RECENT_7                        35
 #define IDM_ZOOM_IN                         36
 #define IDM_ZOOM_OUT                        37
+#define IDM_PASTE                           38
 
 #define IDW_STATUS                          1
 #define IDW_REALCLIENT                      2

@@ -15,7 +15,7 @@
 - 2026年4月3日 ver.1.4 ケアレスミスでリリースやり直し。
 - 2026年4月4日 ver.1.5 メモリリークを修正。
 - 2026年5月4日 ver.1.6 高速化。
-- 2026年5月5日 ver.1.7 透過処理を実装。
+- 2026年5月5日 ver.1.7 透過処理を実装。イメージを貼り付け可能に。
 
 # ChangeLog
 
@@ -34,4 +34,4 @@
 - April 3, 2026 ver.1.4 Re-released due to a careless mistake.
 - April 4, 2026 ver.1.5 Fixed memory leak.
 - May 4, 2026 ver.1.6 Speed ​​up.
-- May 5, 2026 ver.1.7: Transparency processing implemented.
+- May 5, 2026 ver.1.7: Transparency processing implemented. Image can now be pasted.
